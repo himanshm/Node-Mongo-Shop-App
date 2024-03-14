@@ -15,10 +15,19 @@ export function getProducts(req, res, next) {
 
 export function getProduct(req, res, next) {
   const prodId = req.params.productId;
-  Product.findById(prodId)
-    .then(([product]) => {
+  // Product.findAll({ where: { id: prodId } })
+  //   .then((products) => {
+  //     res.render('shop/product-detail', {
+  //       product: products[0],
+  //       pageTitle: products[0].title,
+  //       path: '/products',
+  //     });
+  //   })
+  //   .catch((err) => console.log(err));
+  Product.findByPk(prodId)
+    .then((product) => {
       res.render('shop/product-detail', {
-        product: product[0],
+        product: product,
         pageTitle: product.title,
         path: '/products',
       });
@@ -61,7 +70,7 @@ export function getCart(req, res, next) {
 
 export function postCart(req, res, next) {
   const prodId = req.body.productId;
-  Product.findById(prodId, (product) => {
+  Product.findByPk(prodId, (product) => {
     Cart.addProduct(prodId, product.price);
   });
   res.redirect('/cart');
@@ -69,7 +78,7 @@ export function postCart(req, res, next) {
 
 export function postCartDeleteProduct(req, res, next) {
   const prodId = req.body.productId;
-  Product.findById(prodId, (product) => {
+  Product.findByPk(prodId, (product) => {
     Cart.deleteProduct(prodId, product.price);
     res.redirect('/cart');
   });
