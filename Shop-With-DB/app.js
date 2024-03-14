@@ -5,7 +5,7 @@ import express, { static as expressStatic } from 'express';
 import bodyParser from 'body-parser';
 
 import { get404 } from './controllers/error.js';
-import db from './util/database.js';
+import sequalize from './util/database.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -26,4 +26,10 @@ app.use(shopRoutes);
 
 app.use(get404);
 
-app.listen(3000);
+sequalize
+  .sync()
+  .then((result) => {
+    // console.log(result);
+    app.listen(3000);
+  })
+  .catch((err) => console.log(err));
