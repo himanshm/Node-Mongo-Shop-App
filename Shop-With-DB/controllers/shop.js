@@ -2,10 +2,10 @@ import Product from '../models/product.js';
 import Cart from '../models/cart.js';
 
 export function getProducts(req, res, next) {
-  Product.fetchAll()
-    .then(([rows, fieldData]) => {
+  Product.findAll()
+    .then((products) => {
       res.render('shop/product-list', {
-        prods: rows,
+        prods: products,
         pageTitle: 'All Products',
         path: '/products',
       });
