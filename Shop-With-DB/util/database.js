@@ -1,10 +1,8 @@
-import { createPool } from 'mysql2';
+import { Sequelize } from 'sequelize';
 
-const pool = createPool({
+const sequelize = new Sequelize('node_shop', 'root', 'vrprime1314', {
+  dialect: 'mysql',
   host: 'localhost',
-  user: 'root',
-  database: 'node-complete',
-  password: 'nodecomplete',
 });
 
-export default pool.promise();
+export default sequelize;

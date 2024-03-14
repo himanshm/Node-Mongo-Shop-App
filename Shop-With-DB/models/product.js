@@ -1,6 +1,6 @@
-import db from '../util/database';
+import db from '../util/database.js';
 
-import Cart from './cart';
+import Cart from './cart.js';
 
 export default class Product {
   constructor(id, title, imageUrl, description, price) {

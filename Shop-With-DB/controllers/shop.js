@@ -1,5 +1,5 @@
-import Product from '../models/product';
-import Cart from '../models/cart';
+import Product from '../models/product.js';
+import Cart from '../models/cart.js';
 
 export function getProducts(req, res, next) {
   Product.fetchAll()

@@ -1,7 +1,8 @@
 import { readFile, writeFile } from 'fs';
 import { join, dirname } from 'path';
+import directoryName from '../util/path.js';
 
-const p = join(dirname(process.mainModule.filename), 'data', 'cart.json');
+const p = join(directoryName, 'data', 'cart.json');
 
 export default class Cart {
   static addProduct(id, productPrice) {

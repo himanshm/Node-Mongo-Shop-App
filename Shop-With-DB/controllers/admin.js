@@ -1,4 +1,4 @@
-import Product from '../models/product';
+import Product from '../models/product.js';
 
 export function getAddProduct(req, res, next) {
   res.render('admin/edit-product', {
