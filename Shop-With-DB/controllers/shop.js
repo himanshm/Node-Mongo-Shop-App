@@ -57,22 +57,35 @@ export async function getCart(req, res, next) {
 export async function postCart(req, res, next) {
   try {
     const prodId = req.body.productId;
-    const cart = await req.user.getCart();
-    const products = await cart.getProducts({ where: { id: prodId } });
+    let fetchedCart;
+    let newQuantity = 1;
 
+    // Getting the user's cart
+    const cart = await req.user.getCart();
+    fetchedCart = cart;
+
+    // Getting products from the cart
+    const products = await cart.getProducts({ where: { id: prodId } });
     let product;
+
     if (products.length > 0) {
       product = products[0];
     }
 
-    let newQuantity = 1;
     if (product) {
       // if product is anything but undefined, get old quantity and increase it
-      // ...
+      const oldQuantity = product.cartItem.quantity;
+      newQuantity = oldQuantity + 1;
+    } else {
+      // If product doesn't exist in the cart, find it by ID
+      product = await Product.findByPk(prodId);
     }
 
-    product = await Product.findByPk(prodId);
-    await cart.addProduct(product, { through: { quantity: newQuantity } });
+    // Adding product to cart with the updated quantity
+    await fetchedCart.addProduct(product, {
+      through: { quantity: newQuantity },
+    });
+
     res.redirect('/cart');
   } catch (err) {
     console.log(err);
