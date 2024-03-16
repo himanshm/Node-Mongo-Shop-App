@@ -53,12 +53,31 @@ export async function getCart(req, res, next) {
   }
 }
 
-export function postCart(req, res, next) {
-  const prodId = req.body.productId;
-  Product.findByPk(prodId, (product) => {
-    Cart.addProduct(prodId, product.price);
-  });
-  res.redirect('/cart');
+// Add new products to the cart
+export async function postCart(req, res, next) {
+  try {
+    const prodId = req.body.productId;
+    const cart = await req.user.getCart();
+    const products = await cart.getProducts({ where: { id: prodId } });
+
+    let product;
+    if (products.length > 0) {
+      product = products[0];
+    }
+
+    let newQuantity = 1;
+    if (product) {
+      // if product is anything but undefined, get old quantity and increase it
+      // ...
+    }
+
+    product = await Product.findByPk(prodId);
+    await cart.addProduct(product, { through: { quantity: newQuantity } });
+    res.redirect('/cart');
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
 }
 
 export function postCartDeleteProduct(req, res, next) {
