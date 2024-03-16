@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import sequalize from '../util/database.js';
 
-const Product = sequalize.define('Product', {
+const Product = sequalize.define('product', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,

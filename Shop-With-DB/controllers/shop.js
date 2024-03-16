@@ -132,16 +132,17 @@ export async function postOrder(req, res, next) {
   }
 }
 
-export function getOrders(req, res, next) {
-  res.render('shop/orders', {
-    path: '/orders',
-    pageTitle: 'Your Orders',
-  });
-}
+export async function getOrders(req, res, next) {
+  try {
+    const orders = await req.user.getOrders({ include: ['products'] });
 
-export function getCheckout(req, res, next) {
-  res.render('shop/checkout', {
-    path: '/checkout',
-    pageTitle: 'Checkout',
-  });
+    res.render('shop/orders', {
+      path: '/orders',
+      pageTitle: 'Your Orders',
+      orders: orders,
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
 }

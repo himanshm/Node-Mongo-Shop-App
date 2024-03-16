@@ -37,3 +37,10 @@ initialize();
 
 So the initial code above will only run for incoming requests which on the other hand can only reach it if we did successfully start our server here with app listen
 and that in turn is only true if we are done with our initialization code in initilize function.
+
+We can use a concept called eager loading where we basically instruct sequelize
+`const orders = await req.user.getOrders({ include: ['products'] });`
+
+'hey if you are fetching all the orders, please also fetch all related products already and give me back one array of orders that also includes the products per order.'
+
+Now this only works of course because we do have a relation between orders and products as set up in app.js `Order.belongsToMany(Product, { through: OrderItem });`

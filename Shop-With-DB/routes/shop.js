@@ -8,7 +8,6 @@ import {
   postCart,
   postCartDeleteProduct,
   getOrders,
-  getCheckout,
   postOrder,
 } from '../controllers/shop.js';
 
@@ -29,7 +28,5 @@ router.post('/cart-delete-item', postCartDeleteProduct);
 router.post('/create-order', postOrder);
 
 router.get('/orders', getOrders);
-
-router.get('/checkout', getCheckout);
 
 export default router;
