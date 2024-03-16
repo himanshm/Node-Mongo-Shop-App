@@ -20,6 +20,8 @@ import adminRoutes from './routes/admin.js';
 import shopRoutes from './routes/shop.js';
 import Cart from './models/cart.js';
 import CartItem from './models/cart-item.js';
+import Order from './models/order.js';
+import OrderItem from './models/order-items.js';
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressStatic(join(__dirname, 'public')));
@@ -52,6 +54,10 @@ Cart.belongsTo(User); // optional
 
 Cart.belongsToMany(Product, { through: CartItem });
 Product.belongsToMany(Cart, { through: CartItem });
+
+Order.belongsTo(User);
+User.hasMany(Order);
+Order.belongsToMany(Product, { through: OrderItem });
 
 async function initialize() {
   try {
