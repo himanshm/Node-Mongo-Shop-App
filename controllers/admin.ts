@@ -1,5 +1,3 @@
-import Product from '../models/product.js';
-
 export function getAddProduct(req, res, next) {
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',

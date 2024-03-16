@@ -1,5 +1,3 @@
-import Product from '../models/product.js';
-
 export function getProducts(req, res, next) {
   Product.findAll()
     .then((products) => {
