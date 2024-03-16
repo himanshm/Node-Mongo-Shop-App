@@ -1,30 +1,37 @@
-// export function getAddProduct(req, res, next) {
-//   res.render('admin/edit-product', {
-//     pageTitle: 'Add Product',
-//     path: '/admin/add-product',
-//     editing: false,
-//   });
-// }
+import Product from '../models/product';
+import { Request, Response, NextFunction } from 'express';
 
-// export async function postAddProduct(req, res, next) {
-//   try {
-//     const { title, imageUrl, price, description } = req.body;
+export function getAddProduct(req: Request, res: Response, next: NextFunction) {
+  res.render('admin/edit-product', {
+    pageTitle: 'Add Product',
+    path: '/admin/add-product',
+    editing: false,
+  });
+}
 
-//     // Using magic association methods
-//     const result = await req.user.createProduct({
-//       title,
-//       price,
-//       imageUrl,
-//       description,
-//     });
+export async function postAddProduct(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { title, imageUrl, price, description } = req.body;
 
-//     console.log('Created product');
-//     res.redirect('/admin/products');
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
+    // // Using magic association methods
+    // const result = await req.user.createProduct({
+    //   title,
+    //   price,
+    //   imageUrl,
+    //   description,
+    // });
+
+    console.log('Created product');
+    res.redirect('/admin/products');
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
 
 // export async function getEditProduct(req, res, next) {
 //   try {
