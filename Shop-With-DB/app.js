@@ -24,6 +24,7 @@ import CartItem from './models/cart-item.js';
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressStatic(join(__dirname, 'public')));
 
+// Create a user
 app.use(async (req, res, next) => {
   try {
     const user = await User.findByPk(1);
@@ -54,8 +55,8 @@ Product.belongsToMany(Cart, { through: CartItem });
 
 async function initialize() {
   try {
-    await sequalize.sync({ force: true });
-    // await sequalize.sync();
+    // await sequalize.sync({ force: true });
+    await sequalize.sync();
     console.log('Database synchronized successfully.');
 
     let user = await User.findByPk(1);
@@ -64,6 +65,9 @@ async function initialize() {
       user = await User.create({ name: 'Himansh', email: 'him@example.com' });
       // console.log('User created:', user);
     }
+
+    const cart = await user.createCart();
+    // console.log('Cart creted: ', cart);
 
     // console.log('User found:', user);
     app.listen(3000);
