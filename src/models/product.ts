@@ -1,7 +1,6 @@
-import { ObjectId } from 'mongodb';
 import { mongoConnect, getDb } from '../util/database';
 
-interface Product {
+export interface ProductType {
   title: string;
   imageUrl: string;
   price: number;
@@ -13,9 +12,9 @@ class Product {
     public title: string,
     public imageUrl: string,
     public price: number,
-    public description: string,
-    public id?: ObjectId
-  ) {}
+    public description: string
+  ) // public id?: number
+  {}
 
   async save(): Promise<void> {
     try {

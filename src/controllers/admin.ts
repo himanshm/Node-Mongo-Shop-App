@@ -1,5 +1,6 @@
 import Product from '../models/product';
 import { Request, Response, NextFunction } from 'express';
+import { ProductType } from '../models/product';
 
 export function getAddProduct(req: Request, res: Response, next: NextFunction) {
   res.render('admin/edit-product', {
@@ -15,16 +16,10 @@ export async function postAddProduct(
   next: NextFunction
 ) {
   try {
-    const { title, imageUrl, price, description } = req.body;
+    const { title, imageUrl, price, description }: ProductType = req.body;
 
-    // // Using magic association methods
-    // const result = await req.user.createProduct({
-    //   title,
-    //   price,
-    //   imageUrl,
-    //   description,
-    // });
-
+    const product = new Product(title, imageUrl, price, description);
+    await product.save();
     console.log('Created product');
     res.redirect('/admin/products');
   } catch (err) {
