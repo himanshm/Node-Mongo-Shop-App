@@ -1,5 +1,4 @@
 import Product from '../models/product.js';
-import Cart from '../models/cart.js';
 
 export function getProducts(req, res, next) {
   Product.findAll()
@@ -104,6 +103,32 @@ export async function postCartDeleteProduct(req, res, next) {
   } catch (err) {
     console.log(err);
     next(err);
+  }
+}
+
+export async function postOrder(req, res, next) {
+  try {
+    let fetchedCart;
+    const cart = await req.user.getCart();
+    fetchedCart = cart;
+
+    const products = await cart.getProducts();
+
+    const order = await req.user.createOrder();
+
+    await order.addProduct(
+      products.map((product) => {
+        product.orderItem = { quantity: product.cartItem.quantity };
+        return product;
+      })
+    );
+
+    // Clearing the cart
+    await fetchedCart.setProducts(null);
+
+    res.redirect('/orders');
+  } catch (err) {
+    console.log(err);
   }
 }
 
