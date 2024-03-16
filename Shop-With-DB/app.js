@@ -22,6 +22,18 @@ import shopRoutes from './routes/shop.js';
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressStatic(join(__dirname, 'public')));
 
+app.use(async (req, res, next) => {
+  try {
+    const user = await User.findByPk(1);
+
+    // Store the Sequelize object user in the request
+    req.user = user;
+    next();
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
@@ -30,10 +42,44 @@ app.use(get404);
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Product); // optional
 
-sequalize
-  .sync({ force: true }) // force:true wouldn't be used in the production
-  .then((result) => {
-    // console.log(result);
+// sequalize
+//   //.sync({ force: true }) // force:true wouldn't be used in the production
+//   .sync({ force: true })
+//   .then((result) => {
+//     console.log(result);
+//     return User.findByPk(1);
+//   })
+//   .then((user) => {
+//     if (!user) {
+//       return User.create({ Name: 'Himansh', email: 'him@example.com' });
+//     }
+//     return user;
+//   })
+//   .then((user) => {
+//     console.log(user);
+//     app.listen(3000);
+//   })
+//   .catch((err) => console.log(err));
+
+async function initialize() {
+  try {
+    // await sequalize.sync({ force: true });
+    await sequalize.sync();
+    console.log('Database synchronized successfully.');
+
+    let user = await User.findByPk(1);
+
+    if (!user) {
+      user = await User.create({ name: 'Himansh', email: 'him@example.com' });
+      console.log('User created:', user);
+    }
+
+    console.log('User found:', user);
     app.listen(3000);
-  })
-  .catch((err) => console.log(err));
+    console.log('Server is listening on port 3000.');
+  } catch (err) {
+    console.error('Error occurred:', err);
+  }
+}
+
+initialize();
