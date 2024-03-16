@@ -31,6 +31,7 @@ app.use(async (req, res, next) => {
     next();
   } catch (err) {
     console.log(err);
+    next(err);
   }
 });
 
@@ -39,27 +40,9 @@ app.use(shopRoutes);
 
 app.use(get404);
 
+// Setting relations
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Product); // optional
-
-// sequalize
-//   //.sync({ force: true }) // force:true wouldn't be used in the production
-//   .sync({ force: true })
-//   .then((result) => {
-//     console.log(result);
-//     return User.findByPk(1);
-//   })
-//   .then((user) => {
-//     if (!user) {
-//       return User.create({ Name: 'Himansh', email: 'him@example.com' });
-//     }
-//     return user;
-//   })
-//   .then((user) => {
-//     console.log(user);
-//     app.listen(3000);
-//   })
-//   .catch((err) => console.log(err));
 
 async function initialize() {
   try {
@@ -71,10 +54,10 @@ async function initialize() {
 
     if (!user) {
       user = await User.create({ name: 'Himansh', email: 'him@example.com' });
-      console.log('User created:', user);
+      // console.log('User created:', user);
     }
 
-    console.log('User found:', user);
+    // console.log('User found:', user);
     app.listen(3000);
     console.log('Server is listening on port 3000.');
   } catch (err) {
