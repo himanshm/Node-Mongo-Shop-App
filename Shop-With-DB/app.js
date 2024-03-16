@@ -18,6 +18,8 @@ app.set('views', 'views');
 
 import adminRoutes from './routes/admin.js';
 import shopRoutes from './routes/shop.js';
+import Cart from './models/cart.js';
+import CartItem from './models/cart-item.js';
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressStatic(join(__dirname, 'public')));
@@ -44,10 +46,16 @@ app.use(get404);
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Product); // optional
 
+User.hasOne(Cart);
+Cart.belongsTo(User); // optional
+
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
+
 async function initialize() {
   try {
-    // await sequalize.sync({ force: true });
-    await sequalize.sync();
+    await sequalize.sync({ force: true });
+    // await sequalize.sync();
     console.log('Database synchronized successfully.');
 
     let user = await User.findByPk(1);

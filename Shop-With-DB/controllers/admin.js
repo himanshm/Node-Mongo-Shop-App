@@ -1,4 +1,3 @@
-import { where } from 'sequelize';
 import Product from '../models/product.js';
 
 export function getAddProduct(req, res, next) {
