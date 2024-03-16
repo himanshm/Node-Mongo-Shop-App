@@ -1,21 +1,11 @@
-// import { Router } from 'express';
+import { Router } from 'express';
+import { getProducts, getIndex } from '../controllers/shop';
 
-// import {
-//   getIndex,
-//   getProducts,
-//   getProduct,
-//   getCart,
-//   postCart,
-//   postCartDeleteProduct,
-//   getOrders,
-//   postOrder,
-// } from '../controllers/shop.js';
+const router = Router();
 
-// const router = Router();
+router.get('/', getIndex);
 
-// router.get('/', getIndex);
-
-// router.get('/products', getProducts);
+router.get('/products', getProducts);
 
 // router.get('/products/:productId', getProduct);
 
@@ -29,4 +19,4 @@
 
 // router.get('/orders', getOrders);
 
-// export default router;
+export default router;

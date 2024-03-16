@@ -1,14 +1,23 @@
-// export function getProducts(req, res, next) {
-//   Product.findAll()
-//     .then((products) => {
-//       res.render('shop/product-list', {
-//         prods: products,
-//         pageTitle: 'All Products',
-//         path: '/products',
-//       });
-//     })
-//     .catch((err) => console.log(err));
-// }
+import { Request, Response, NextFunction } from 'express';
+import Product from '../models/product';
+
+export async function getProducts(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const products = await Product.fetchAll();
+    res.render('shop/product-list', {
+      prods: products,
+      pageTitle: 'All Products',
+      path: '/products',
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
 
 // export function getProduct(req, res, next) {
 //   const prodId = req.params.productId;
@@ -23,17 +32,23 @@
 //     .catch((err) => console.log(err));
 // }
 
-// export function getIndex(req, res, next) {
-//   Product.findAll()
-//     .then((products) => {
-//       res.render('shop/index', {
-//         prods: products,
-//         pageTitle: 'Shop',
-//         path: '/',
-//       });
-//     })
-//     .catch((err) => console.log(err));
-// }
+export async function getIndex(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const products = await Product.fetchAll();
+    res.render('shop/index', {
+      prods: products,
+      pageTitle: 'Shop',
+      path: '/',
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
 
 // export async function getCart(req, res, next) {
 //   try {
