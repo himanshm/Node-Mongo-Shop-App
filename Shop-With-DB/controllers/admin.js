@@ -1,3 +1,4 @@
+import { where } from 'sequelize';
 import Product from '../models/product.js';
 
 export function getAddProduct(req, res, next) {
@@ -11,12 +12,13 @@ export function getAddProduct(req, res, next) {
 export async function postAddProduct(req, res, next) {
   try {
     const { title, imageUrl, price, description } = req.body;
-    const result = await Product.create({
+
+    // Using magic association methods
+    const result = await req.user.createProduct({
       title,
       price,
       imageUrl,
       description,
-      userId: req.user.id,
     });
 
     console.log('Created product');
@@ -35,7 +37,8 @@ export async function getEditProduct(req, res, next) {
     }
 
     const prodId = req.params.productId;
-    const product = await Product.findByPk(prodId);
+    const products = await req.user.getProducts({ where: { id: prodId } });
+    const product = products[0];
 
     if (!product) {
       return res.redirect('/');
@@ -84,7 +87,7 @@ export async function postEditProduct(req, res, next) {
 
 export async function getProducts(req, res, next) {
   try {
-    const products = await Product.findAll();
+    const products = await req.user.getProducts();
 
     res.render('admin/products', {
       prods: products,
