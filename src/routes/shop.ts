@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getProducts, getIndex } from '../controllers/shop';
+import { getProducts, getIndex, getProduct } from '../controllers/shop';
 
 const router = Router();
 
@@ -7,7 +7,7 @@ router.get('/', getIndex);
 
 router.get('/products', getProducts);
 
-// router.get('/products/:productId', getProduct);
+router.get('/products/:productId', getProduct);
 
 // router.get('/cart', getCart);
 
