@@ -84,20 +84,24 @@ export async function postAddProduct(
 //   }
 // }
 
-// export async function getProducts(req, res, next) {
-//   try {
-//     const products = await req.user.getProducts();
+export async function getProducts(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const products = await Product.fetchAll();
 
-//     res.render('admin/products', {
-//       prods: products,
-//       pageTitle: 'Admin Products',
-//       path: '/admin/products',
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
+    res.render('admin/products', {
+      prods: products,
+      pageTitle: 'Admin Products',
+      path: '/admin/products',
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
 
 // export async function postDeleteProduct(req, res, next) {
 //   try {
