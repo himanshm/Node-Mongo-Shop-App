@@ -20,8 +20,18 @@ class Product {
   async save(): Promise<void> {
     try {
       const db = getDb();
-      const result = await db.collection<Product>('products').insertOne(this);
-      console.log(result);
+      if (this._id) {
+        const result = await db.collection<Product>('products').updateOne(
+          {
+            _id: new ObjectId(this._id),
+          },
+          { $set: this } // {$set: {title: this.title, imageUrl: this.imageUrl, price: this.price } and so on}
+        );
+        console.log(result);
+      } else {
+        const result = await db.collection<Product>('products').insertOne(this);
+        console.log(result);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -35,7 +45,7 @@ class Product {
         .find({})
         .toArray();
 
-      console.log(products);
+      // console.log(products);
       return products;
     } catch (err) {
       console.log(err);
@@ -54,7 +64,7 @@ class Product {
         throw new Error('Product not found');
       }
 
-      console.log(product);
+      // console.log(product);
       return product;
     } catch (error) {
       console.log(error);
