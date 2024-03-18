@@ -15,7 +15,8 @@ class Product {
     public imageUrl: string,
     public price: number,
     public description: string,
-    id?: ObjectId
+    id?: ObjectId | null,
+    public userId?: string
   ) {
     this._id = id ? new ObjectId(id) : null;
   }

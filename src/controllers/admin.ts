@@ -1,7 +1,8 @@
 import Product from '../models/product';
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { ProductType } from '../models/product';
 import { ObjectId } from 'mongodb';
+import { Request } from '../app';
 
 export function getAddProduct(req: Request, res: Response, next: NextFunction) {
   res.render('admin/edit-product', {
@@ -16,10 +17,22 @@ export async function postAddProduct(
   res: Response,
   next: NextFunction
 ) {
+  let userId: string | undefined;
   try {
     const { title, imageUrl, price, description }: ProductType = req.body;
 
-    const product = new Product(title, imageUrl, price, description);
+    if (req.user) {
+      userId = req.user._id?.toString();
+    }
+
+    const product = new Product(
+      title,
+      imageUrl,
+      price,
+      description,
+      null,
+      userId
+    );
     await product.save();
     console.log('Created product');
     res.redirect('/admin/products');
@@ -66,6 +79,7 @@ export async function postEditProduct(
   next: NextFunction
 ) {
   try {
+    let userId: string | undefined;
     const prodId: ObjectId = req.body.productId;
     console.log('postEditProductId:', prodId);
     const updatedTitle: string = req.body.title;
@@ -73,12 +87,17 @@ export async function postEditProduct(
     const updatedImageUrl: string = req.body.imageUrl;
     const updatedDesc: string = req.body.description;
 
+    if (req.user) {
+      userId = req.user._id?.toString();
+    }
+
     const product = new Product(
       updatedTitle,
       updatedImageUrl,
       updatedPrice,
       updatedDesc,
-      prodId
+      prodId,
+      userId
     );
 
     await product.save();

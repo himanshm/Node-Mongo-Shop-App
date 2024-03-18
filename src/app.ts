@@ -10,12 +10,11 @@ import { mongoConnect } from './util/database';
 import adminRoutes from './routes/admin';
 import shopRoutes from './routes/shop';
 import User from './models/user';
-import { UserType } from './models/user';
 
 import { get404 } from './controllers/error';
 
-interface Request extends ExpressRequest {
-  user?: UserType;
+export interface Request extends ExpressRequest {
+  user?: User;
 }
 
 const app: Express = express();

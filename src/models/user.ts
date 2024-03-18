@@ -1,13 +1,12 @@
 import { ObjectId } from 'mongodb';
 import { getDb } from '../util/database';
 
-export interface UserType {
-  username: string;
-  email: string;
-}
-
 class User {
-  constructor(public username: string, public email: string) {}
+  constructor(
+    public username: string,
+    public email: string,
+    public _id?: ObjectId
+  ) {}
 
   async save() {
     const db = getDb();
@@ -15,14 +14,13 @@ class User {
     console.log(result);
   }
 
-  static async findById(userId: string) {
+  static async findById(userId: string | undefined) {
     const db = getDb();
-    const result = await db
+    const user = await db
       .collection<User>('users')
       .findOne({ _id: new ObjectId(userId) });
-    console.log(result);
 
-    return result;
+    return user;
   }
 }
 
