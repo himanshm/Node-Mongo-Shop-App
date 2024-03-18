@@ -9,7 +9,7 @@ export interface ProductType {
 }
 
 class Product {
-  public _id?: ObjectId | null;
+  public _id?: ObjectId;
   constructor(
     public title: string,
     public imageUrl: string,
@@ -18,7 +18,7 @@ class Product {
     id?: ObjectId | null,
     public userId?: string
   ) {
-    this._id = id ? new ObjectId(id) : null;
+    this._id = id ? new ObjectId(id) : undefined;
   }
 
   async save(): Promise<void> {
@@ -29,12 +29,11 @@ class Product {
           {
             _id: this._id,
           },
-          { $set: this } // {$set: {title: this.title, imageUrl: this.imageUrl, price: this.price } and so on}
+          { $set: this }
         );
         console.log(result);
       } else {
         const result = await db.collection<Product>('products').insertOne(this);
-        // this._id = result.insertedId;
         console.log(result);
       }
     } catch (err) {
@@ -82,7 +81,7 @@ class Product {
     try {
       const db = getDb();
       const result = await db
-        .collection('products')
+        .collection<Product>('products')
         .deleteOne({ _id: new ObjectId(prodId) });
       console.log(result);
       return result;

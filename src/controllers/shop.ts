@@ -1,4 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
+import { Request } from '../app';
 import Product from '../models/product';
 
 export async function getProducts(
@@ -56,60 +57,66 @@ export async function getIndex(
   }
 }
 
-// export async function getCart(req, res, next) {
-//   try {
-//     const cart = await req.user.getCart();
-//     const products = await cart.getProducts();
-//     res.render('shop/cart', {
-//       path: '/cart',
-//       pageTitle: 'Your Cart',
-//       products: products,
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
+export async function getCart(req: Request, res: Response, next: NextFunction) {
+  try {
+    const products = await req.user?.getCart();
+    res.render('shop/cart', {
+      path: '/cart',
+      pageTitle: 'Your Cart',
+      products: products,
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
 
-// // Add new products to the cart
-// export async function postCart(req, res, next) {
-//   try {
-//     const prodId = req.body.productId;
-//     let fetchedCart;
-//     let newQuantity = 1;
+// Add new products to the cart
+export async function postCart(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const prodId = req.body.productId;
+    const product = await Product.findById(prodId);
+    await req.user?.addToCart(product);
 
-//     // Getting the user's cart
-//     const cart = await req.user.getCart();
-//     fetchedCart = cart;
+    // let fetchedCart;
+    // let newQuantity = 1;
 
-//     // Getting products from the cart
-//     const products = await cart.getProducts({ where: { id: prodId } });
-//     let product;
+    // // Getting the user's cart
+    // const cart = await req.user.getCart();
+    // fetchedCart = cart;
 
-//     if (products.length > 0) {
-//       product = products[0];
-//     }
+    // // Getting products from the cart
+    // const products = await cart.getProducts({ where: { id: prodId } });
+    // let product;
 
-//     if (product) {
-//       // if product is anything but undefined, get old quantity and increase it
-//       const oldQuantity = product.cartItem.quantity;
-//       newQuantity = oldQuantity + 1;
-//     } else {
-//       // If product doesn't exist in the cart, find it by ID
-//       product = await Product.findByPk(prodId);
-//     }
+    // if (products.length > 0) {
+    //   product = products[0];
+    // }
 
-//     // Adding product to cart with the updated quantity
-//     await fetchedCart.addProduct(product, {
-//       through: { quantity: newQuantity },
-//     });
+    // if (product) {
+    //   // if product is anything but undefined, get old quantity and increase it
+    //   const oldQuantity = product.cartItem.quantity;
+    //   newQuantity = oldQuantity + 1;
+    // } else {
+    //   // If product doesn't exist in the cart, find it by ID
+    //   product = await Product.findByPk(prodId);
+    // }
 
-//     res.redirect('/cart');
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
+    // // Adding product to cart with the updated quantity
+    // await fetchedCart.addProduct(product, {
+    //   through: { quantity: newQuantity },
+    // });
+
+    res.redirect('/cart');
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
 
 // export async function postCartDeleteProduct(req, res, next) {
 //   try {

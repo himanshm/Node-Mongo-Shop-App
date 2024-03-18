@@ -1,5 +1,11 @@
 import { Router } from 'express';
-import { getProducts, getIndex, getProduct } from '../controllers/shop';
+import {
+  getProducts,
+  getIndex,
+  getProduct,
+  getCart,
+  postCart,
+} from '../controllers/shop';
 
 const router = Router();
 
@@ -9,9 +15,9 @@ router.get('/products', getProducts);
 
 router.get('/products/:productId', getProduct);
 
-// router.get('/cart', getCart);
+router.get('/cart', getCart);
 
-// router.post('/cart', postCart);
+router.post('/cart', postCart);
 
 // router.post('/cart-delete-item', postCartDeleteProduct);
 
