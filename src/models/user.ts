@@ -9,6 +9,21 @@ interface CartItem {
 interface Cart {
   items: CartItem[];
 }
+interface OrderItem {
+  product: Product;
+  quantity: number;
+}
+
+interface Order {
+  items: Product[];
+  // items: OrderItem[];
+  user: {
+    _id: ObjectId;
+    username: string;
+    email: string;
+  };
+  _id?: ObjectId;
+}
 
 class User {
   constructor(
@@ -95,7 +110,34 @@ class User {
   async addOrder() {
     try {
       const db = getDb();
-      await db.collection('orders').insertOne(this.cart);
+      const products = await this.getCart();
+      // const orderItems: OrderItem[] = [];
+
+      // for (const cartItem of this.cart.items) {
+      //   const product = await db
+      //     .collection<Product>('products')
+      //     .findOne({ _id: cartItem.productId });
+
+      //   if (product) {
+      //     orderItems.push({
+      //       product: product,
+      //       quantity: cartItem.quantity,
+      //     });
+      //   }
+      // }
+
+      const order: Order = {
+        items: products,
+        // items: orderItems,
+        // Duplicate data both in orders and users collection
+        user: {
+          _id: new ObjectId(this._id),
+          username: this.username,
+          email: this.email,
+        },
+      };
+
+      await db.collection<Order>('orders').insertOne(order);
       this.cart = { items: [] };
       await db
         .collection<User>('users')
@@ -103,6 +145,15 @@ class User {
           { _id: new ObjectId(this._id) },
           { $set: { cart: { items: [] } } }
         );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getOrders() {
+    try {
+      const db = getDb();
+      // await db.collection('orders').
     } catch (error) {
       console.log(error);
     }
