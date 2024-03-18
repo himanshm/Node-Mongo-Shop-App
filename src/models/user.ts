@@ -15,7 +15,7 @@ interface OrderItem {
 }
 
 interface Order {
-  items: Product[];
+  products: Product[];
   // items: OrderItem[];
   user: {
     _id: ObjectId;
@@ -127,7 +127,7 @@ class User {
       // }
 
       const order: Order = {
-        items: products,
+        products: products,
         // items: orderItems,
         // Duplicate data both in orders and users collection
         user: {
@@ -153,7 +153,10 @@ class User {
   async getOrders() {
     try {
       const db = getDb();
-      // await db.collection('orders').
+      return await db
+        .collection('orders')
+        .find({ 'user._id': new ObjectId(this._id) })
+        .toArray();
     } catch (error) {
       console.log(error);
     }

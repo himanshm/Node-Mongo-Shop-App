@@ -116,17 +116,21 @@ export async function postOrder(
   }
 }
 
-// export async function getOrders(req, res, next) {
-//   try {
-//     const orders = await req.user.getOrders({ include: ['products'] });
+export async function getOrders(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const orders = await req.user?.getOrders();
 
-//     res.render('shop/orders', {
-//       path: '/orders',
-//       pageTitle: 'Your Orders',
-//       orders: orders,
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
+    res.render('shop/orders', {
+      path: '/orders',
+      pageTitle: 'Your Orders',
+      orders: orders,
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
