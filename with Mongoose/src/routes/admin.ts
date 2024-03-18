@@ -1,24 +1,16 @@
-// import { Router } from 'express';
+import { Router } from 'express';
+import { getAddProduct, postAddProduct } from '../controllers/admin';
 
-// import {
-//   getAddProduct,
-//   postAddProduct,
-//   getProducts,
-//   getEditProduct,
-//   postEditProduct,
-//   postDeleteProduct,
-// } from '../controllers/admin';
-
-// const router = Router();
+const router = Router();
 
 // // /admin/add-product => GET
-// router.get('/add-product', getAddProduct);
+router.get('/add-product', getAddProduct);
 
 // // /admin/products => GET
 // router.get('/products', getProducts);
 
 // // // /admin/add-product => POST
-// router.post('/add-product', postAddProduct);
+router.post('/add-product', postAddProduct);
 
 // router.get('/edit-product/:productId', getEditProduct);
 
@@ -26,4 +18,4 @@
 
 // router.post('/delete-product', postDeleteProduct);
 
-// export default router;
+export default router;

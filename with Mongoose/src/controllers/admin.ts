@@ -1,46 +1,34 @@
-// import Product from '../models/product';
-// import { Response, NextFunction } from 'express';
-// import { ProductType } from '../models/product';
+import Product from '../models/product';
+import { Request, Response, NextFunction } from 'express';
+import { ProductType } from '../models/product';
 // import { ObjectId } from 'mongodb';
 // import { Request } from '../app';
 
-// export function getAddProduct(req: Request, res: Response, next: NextFunction) {
-//   res.render('admin/edit-product', {
-//     pageTitle: 'Add Product',
-//     path: '/admin/add-product',
-//     editing: false,
-//   });
-// }
+export function getAddProduct(req: Request, res: Response, next: NextFunction) {
+  res.render('admin/edit-product', {
+    pageTitle: 'Add Product',
+    path: '/admin/add-product',
+    editing: false,
+  });
+}
 
-// export async function postAddProduct(
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) {
-//   let userId: string | undefined;
-//   try {
-//     const { title, imageUrl, price, description }: ProductType = req.body;
+export async function postAddProduct(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { title, imageUrl, price, description }: ProductType = req.body;
 
-//     if (req.user) {
-//       userId = req.user._id?.toString();
-//     }
-
-//     const product = new Product(
-//       title,
-//       imageUrl,
-//       price,
-//       description,
-//       null,
-//       userId
-//     );
-//     await product.save();
-//     console.log('Created product');
-//     res.redirect('/admin/products');
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
+    const product = new Product({ title, imageUrl, price, description });
+    await product.save();
+    console.log('Created product');
+    res.redirect('/admin/products');
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
 
 // export async function getEditProduct(
 //   req: Request,

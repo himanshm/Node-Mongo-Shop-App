@@ -5,10 +5,9 @@ import express, {
   NextFunction,
 } from 'express';
 import 'dotenv/config';
-import { Schema, InferSchemaType } from 'mongoose';
 import path from 'path';
 import bodyParser from 'body-parser';
-// import adminRoutes from './routes/admin';
+import adminRoutes from './routes/admin';
 // import shopRoutes from './routes/shop';
 // import User from './models/user';
 
@@ -41,7 +40,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //   }
 // });
 
-// app.use('/admin', adminRoutes);
+app.use('/admin', adminRoutes);
 // app.use(shopRoutes);
 
 app.use(get404);
