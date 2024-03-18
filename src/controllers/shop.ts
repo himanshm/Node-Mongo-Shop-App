@@ -81,36 +81,6 @@ export async function postCart(
     const prodId = req.body.productId;
     const product = await Product.findById(prodId);
     await req.user?.addToCart(product);
-
-    // let fetchedCart;
-    // let newQuantity = 1;
-
-    // // Getting the user's cart
-    // const cart = await req.user.getCart();
-    // fetchedCart = cart;
-
-    // // Getting products from the cart
-    // const products = await cart.getProducts({ where: { id: prodId } });
-    // let product;
-
-    // if (products.length > 0) {
-    //   product = products[0];
-    // }
-
-    // if (product) {
-    //   // if product is anything but undefined, get old quantity and increase it
-    //   const oldQuantity = product.cartItem.quantity;
-    //   newQuantity = oldQuantity + 1;
-    // } else {
-    //   // If product doesn't exist in the cart, find it by ID
-    //   product = await Product.findByPk(prodId);
-    // }
-
-    // // Adding product to cart with the updated quantity
-    // await fetchedCart.addProduct(product, {
-    //   through: { quantity: newQuantity },
-    // });
-
     res.redirect('/cart');
   } catch (err) {
     console.log(err);
@@ -118,19 +88,20 @@ export async function postCart(
   }
 }
 
-// export async function postCartDeleteProduct(req, res, next) {
-//   try {
-//     const prodId = req.body.productId;
-//     const cart = await req.user.getCart();
-//     const products = await cart.getProducts({ where: { id: prodId } });
-//     const product = products[0];
-//     await product.cartItem.destroy();
-//     res.redirect('/cart');
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
+export async function postCartDeleteProduct(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const prodId = req.body.productId;
+    await req.user?.deleteItemsFromCart(prodId);
+    res.redirect('/cart');
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
 
 // export async function postOrder(req, res, next) {
 //   try {
