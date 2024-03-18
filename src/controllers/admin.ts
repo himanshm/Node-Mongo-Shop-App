@@ -41,6 +41,7 @@ export async function getEditProduct(
     }
 
     const prodId = req.params.productId;
+    console.log('getProductId', prodId);
     const product = await Product.findById(prodId);
 
     if (!product) {
@@ -66,12 +67,11 @@ export async function postEditProduct(
 ) {
   try {
     const prodId: ObjectId = req.body.productId;
+    console.log('postEditProductId:', prodId);
     const updatedTitle: string = req.body.title;
     const updatedPrice: number = req.body.price;
     const updatedImageUrl: string = req.body.imageUrl;
     const updatedDesc: string = req.body.description;
-
-    console.log(prodId);
 
     const product = new Product(
       updatedTitle,
@@ -110,23 +110,20 @@ export async function getProducts(
   }
 }
 
-// export async function postDeleteProduct(req, res, next) {
-//   try {
-//     const prodId = req.body.productId;
+export async function postDeleteProduct(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const prodId = req.body.productId;
 
-//     const product = await Product.findByPk(prodId);
+    await Product.deleteById(prodId);
 
-//     if (!product) {
-//       throw new Error('Product not found');
-//     }
-
-//     // Destroy the product
-//     await product.destroy();
-
-//     console.log('DESTROYED PRODUCT!');
-//     res.redirect('/admin/products'); // Only redirect once the deletion is succeeded
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
+    console.log('DESTROYED PRODUCT!');
+    res.redirect('/admin/products');
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}

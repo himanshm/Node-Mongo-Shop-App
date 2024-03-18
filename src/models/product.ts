@@ -9,13 +9,16 @@ export interface ProductType {
 }
 
 class Product {
+  public _id?: ObjectId | null;
   constructor(
     public title: string,
     public imageUrl: string,
     public price: number,
     public description: string,
-    public _id?: ObjectId
-  ) {}
+    id?: ObjectId
+  ) {
+    this._id = id ? new ObjectId(id) : null;
+  }
 
   async save(): Promise<void> {
     try {
@@ -23,18 +26,20 @@ class Product {
       if (this._id) {
         const result = await db.collection<Product>('products').updateOne(
           {
-            _id: new ObjectId(this._id),
+            _id: this._id,
           },
           { $set: this } // {$set: {title: this.title, imageUrl: this.imageUrl, price: this.price } and so on}
         );
         console.log(result);
       } else {
         const result = await db.collection<Product>('products').insertOne(this);
+        // this._id = result.insertedId;
         console.log(result);
       }
     } catch (err) {
       console.log(err);
     }
+    console.log('productId:', this._id);
   }
 
   static async fetchAll() {
@@ -69,6 +74,19 @@ class Product {
     } catch (error) {
       console.log(error);
       throw error; // Rethrow the error to be handled by the calling function
+    }
+  }
+
+  static async deleteById(prodId: string) {
+    try {
+      const db = getDb();
+      const result = await db
+        .collection('products')
+        .deleteOne({ _id: new ObjectId(prodId) });
+      console.log(result);
+      return result;
+    } catch (error) {
+      console.log(error);
     }
   }
 }
