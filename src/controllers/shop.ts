@@ -103,31 +103,18 @@ export async function postCartDeleteProduct(
   }
 }
 
-// export async function postOrder(req, res, next) {
-//   try {
-//     let fetchedCart;
-//     const cart = await req.user.getCart();
-//     fetchedCart = cart;
-
-//     const products = await cart.getProducts();
-
-//     const order = await req.user.createOrder();
-
-//     await order.addProduct(
-//       products.map((product) => {
-//         product.orderItem = { quantity: product.cartItem.quantity };
-//         return product;
-//       })
-//     );
-
-//     // Clearing the cart
-//     await fetchedCart.setProducts(null);
-
-//     res.redirect('/orders');
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
+export async function postOrder(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    await req.user?.addOrder();
+    res.redirect('/orders');
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 // export async function getOrders(req, res, next) {
 //   try {

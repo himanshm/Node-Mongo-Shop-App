@@ -92,6 +92,22 @@ class User {
     }
   }
 
+  async addOrder() {
+    try {
+      const db = getDb();
+      await db.collection('orders').insertOne(this.cart);
+      this.cart = { items: [] };
+      await db
+        .collection<User>('users')
+        .updateOne(
+          { _id: new ObjectId(this._id) },
+          { $set: { cart: { items: [] } } }
+        );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   static async findById(userId: string | undefined) {
     const db = getDb();
     const user = await db
