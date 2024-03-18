@@ -1,6 +1,7 @@
 import Product from '../models/product';
 import { Request, Response, NextFunction } from 'express';
 import { ProductType } from '../models/product';
+import { ObjectId } from 'mongodb';
 
 export function getAddProduct(req: Request, res: Response, next: NextFunction) {
   res.render('admin/edit-product', {
@@ -40,7 +41,7 @@ export async function getEditProduct(
     }
 
     const prodId = req.params.productId;
-    const product = Product.findById(prodId);
+    const product = await Product.findById(prodId);
 
     if (!product) {
       return res.redirect('/');
@@ -64,26 +65,25 @@ export async function postEditProduct(
   next: NextFunction
 ) {
   try {
-    const prodId = req.body.productId;
-    const updatedTitle = req.body.title;
-    const updatedPrice = req.body.price;
-    const updatedImageUrl = req.body.imageUrl;
-    const updatedDesc = req.body.description;
+    const prodId: ObjectId = req.body.productId;
+    const updatedTitle: string = req.body.title;
+    const updatedPrice: number = req.body.price;
+    const updatedImageUrl: string = req.body.imageUrl;
+    const updatedDesc: string = req.body.description;
 
-    const product = await Product.findByPk(prodId);
+    console.log(prodId);
 
-    if (!product) {
-      throw new Error('Product not found');
-    }
-
-    product.title = updatedTitle;
-    product.price = updatedPrice;
-    product.imageUrl = updatedImageUrl;
-    product.description = updatedDesc;
+    const product = new Product(
+      updatedTitle,
+      updatedImageUrl,
+      updatedPrice,
+      updatedDesc,
+      prodId
+    );
 
     await product.save();
 
-    onsole.log('UPDATED PRODUCT!');
+    console.log('UPDATED PRODUCT!');
     res.redirect('/admin/products');
   } catch (err) {
     console.log(err);
