@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-// import { Request } from '../app';
 import Product from '../models/product';
+import Order from '../models/order';
 
 export async function getProducts(
   req: Request,
@@ -65,7 +65,6 @@ export async function getIndex(
 export async function getCart(req: Request, res: Response, next: NextFunction) {
   try {
     const user = await req.user?.populate('cart.items.productId');
-    console.log(user?.cart.items);
     const products = user?.cart.items;
     res.render('shop/cart', {
       path: '/cart',
@@ -110,18 +109,34 @@ export async function postCartDeleteProduct(
   }
 }
 
-// export async function postOrder(
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) {
-//   try {
-//     await req.user?.addOrder();
-//     res.redirect('/orders');
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
+export async function postOrder(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    if (!req.user) {
+      throw new Error('No user found!');
+    }
+
+    const user = await req.user.populate('cart.items.productId');
+    const products = user.cart.items.map((item) => {
+      return { quantity: item.quantity, product: item.productId };
+    });
+
+    const order = new Order({
+      user: {
+        name: req.user.name,
+        userId: req.user,
+      },
+      products: products,
+    });
+    await order.save();
+    res.redirect('/orders');
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 // export async function getOrders(
 //   req: Request,

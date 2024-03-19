@@ -162,24 +162,6 @@ export default User;
 //     });
 //   }
 
-//   async deleteItemsFromCart(productId: ObjectId) {
-//     try {
-//       const db = getDb();
-//       const updatedCartItems = this.cart.items.filter(
-//         (item) => item.productId.toString() !== productId.toString()
-//       );
-
-//       await db
-//         .collection<User>('users')
-//         .updateOne(
-//           { _id: new ObjectId(this._id) },
-//           { $set: { cart: { items: updatedCartItems } } }
-//         );
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   }
-
 //   async addOrder() {
 //     try {
 //       const db = getDb();
