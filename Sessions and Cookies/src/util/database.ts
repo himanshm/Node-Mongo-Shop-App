@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import 'dotenv/config';
 
 const mongooseConnect = async () => {
-  const connectionString = process.env.DB_CONN_STRING;
+  const connectionString = process.env.MONGODB_URI;
 
   if (!connectionString) {
     throw new Error('Database connection string is not provided');
