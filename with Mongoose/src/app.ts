@@ -55,8 +55,6 @@ async function initialize() {
         cart: { items: [] },
       });
 
-      console.log(user);
-
       await user.save();
     }
 

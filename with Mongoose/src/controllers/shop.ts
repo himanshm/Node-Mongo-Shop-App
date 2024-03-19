@@ -120,9 +120,18 @@ export async function postOrder(
     }
 
     const user = await req.user.populate('cart.items.productId');
-    const products = user.cart.items.map((item) => {
-      return { quantity: item.quantity, product: item.productId };
-    });
+    console.log(user.cart.items);
+
+    const products = await Promise.all(
+      user.cart.items.map(async ({ quantity, productId }) => {
+        const product = await Product.findById(productId);
+        if (!product) throw new Error('No Product Found!');
+        return {
+          quantity,
+          product: { ...product.toObject() },
+        };
+      })
+    );
 
     const order = new Order({
       user: {
