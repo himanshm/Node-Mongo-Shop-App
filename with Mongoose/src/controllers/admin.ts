@@ -1,8 +1,8 @@
 import Product from '../models/product';
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { ProductType } from '../models/product';
 // import { ObjectId } from 'mongodb';
-// import { Request } from '../app';
+import { Request } from '../app';
 
 export function getAddProduct(req: Request, res: Response, next: NextFunction) {
   res.render('admin/edit-product', {
@@ -18,9 +18,20 @@ export async function postAddProduct(
   next: NextFunction
 ) {
   try {
+    let userId: string | undefined;
     const { title, imageUrl, price, description }: ProductType = req.body;
 
-    const product = new Product({ title, imageUrl, price, description });
+    if (req.user) {
+      userId = req.user._id;
+    }
+
+    const product = new Product({
+      title,
+      imageUrl,
+      price,
+      description,
+      userId,
+    });
     await product.save();
     console.log('Created product');
     res.redirect('/admin/products');

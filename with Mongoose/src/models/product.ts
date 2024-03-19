@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { model, Schema } from 'mongoose';
 
 export interface ProductType {
@@ -5,6 +6,7 @@ export interface ProductType {
   price: number;
   description: string;
   imageUrl: string;
+  userId: ObjectId;
 }
 
 const productSchema = new Schema<ProductType>({
@@ -22,6 +24,11 @@ const productSchema = new Schema<ProductType>({
   },
   imageUrl: {
     type: String,
+    required: true,
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
   },
 });

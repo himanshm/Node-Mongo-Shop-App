@@ -1,7 +1,8 @@
+import { ObjectId } from 'mongodb';
 import mongoose, { Types, Schema, Model } from 'mongoose';
 
 interface CartItem {
-  productId: Types.ObjectId;
+  productId: ObjectId;
   quantity: number;
 }
 
@@ -13,6 +14,7 @@ export interface UserType {
   name: string;
   email: string;
   cart: Cart;
+  _id?: string;
 }
 
 type UserModelType = Model<UserType>;
@@ -33,6 +35,7 @@ const userSchema = new Schema<UserType, UserModelType>({
       {
         productId: {
           type: Types.ObjectId,
+          ref: 'Product',
           required: true,
         },
         quantity: {
