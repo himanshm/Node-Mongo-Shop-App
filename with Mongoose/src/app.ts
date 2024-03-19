@@ -8,7 +8,7 @@ import 'dotenv/config';
 import path from 'path';
 import bodyParser from 'body-parser';
 import adminRoutes from './routes/admin';
-// import shopRoutes from './routes/shop';
+import shopRoutes from './routes/shop';
 // import User from './models/user';
 
 import { get404 } from './controllers/error';
@@ -41,7 +41,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // });
 
 app.use('/admin', adminRoutes);
-// app.use(shopRoutes);
+app.use(shopRoutes);
 
 app.use(get404);
 
