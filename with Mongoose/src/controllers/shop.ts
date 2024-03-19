@@ -20,24 +20,28 @@ export async function getProducts(
   }
 }
 
-// export async function getProduct(
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) {
-//   try {
-//     const prodId = req.params.productId;
-//     const product = await Product.findById(prodId);
-//     res.render('shop/product-detail', {
-//       product: product,
-//       pageTitle: product.title,
-//       path: '/products',
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     next(error);
-//   }
-// }
+export async function getProduct(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const prodId = req.params.productId;
+    const product = await Product.findById(prodId);
+    if (!product) {
+      throw new Error('No Product found!');
+    }
+
+    res.render('shop/product-detail', {
+      product: product,
+      pageTitle: product.title,
+      path: '/products',
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
 
 export async function getIndex(
   req: Request,

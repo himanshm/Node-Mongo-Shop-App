@@ -2,12 +2,12 @@ import { Router } from 'express';
 import {
   getProducts,
   getIndex,
-//   getProduct,
-//   getCart,
-//   postCart,
-//   postCartDeleteProduct,
-//   postOrder,
-//   getOrders,
+  getProduct,
+  //   getCart,
+  //   postCart,
+  //   postCartDeleteProduct,
+  //   postOrder,
+  //   getOrders,
 } from '../controllers/shop';
 
 const router = Router();
@@ -16,7 +16,7 @@ router.get('/', getIndex);
 
 router.get('/products', getProducts);
 
-// router.get('/products/:productId', getProduct);
+router.get('/products/:productId', getProduct);
 
 // router.get('/cart', getCart);
 
