@@ -1,8 +1,7 @@
 import Product from '../models/product';
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { ProductType } from '../models/product';
 // import { ObjectId } from 'mongodb';
-import { Request } from '../app';
 
 export function getAddProduct(req: Request, res: Response, next: NextFunction) {
   res.render('admin/edit-product', {
@@ -110,7 +109,10 @@ export async function getProducts(
 ) {
   try {
     const products = await Product.find();
-
+    // const products = await Product.find()
+    //   .select('title price -_id')
+    //   .populate('userId', 'name');
+    console.log(products);
     res.render('admin/products', {
       prods: products,
       pageTitle: 'Admin Products',

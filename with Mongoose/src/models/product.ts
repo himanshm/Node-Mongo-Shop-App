@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { model, Schema } from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
 
 export interface ProductType {
   title: string;
@@ -7,6 +7,7 @@ export interface ProductType {
   description: string;
   imageUrl: string;
   userId: ObjectId;
+  _id?: Types.ObjectId;
 }
 
 const productSchema = new Schema<ProductType>({

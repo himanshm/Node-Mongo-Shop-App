@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+// import { Request } from '../app';
 import Product from '../models/product';
 
 export async function getProducts(
@@ -75,22 +76,22 @@ export async function getIndex(
 //   }
 // }
 
-// // Add new products to the cart
-// export async function postCart(
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) {
-//   try {
-//     const prodId = req.body.productId;
-//     const product = await Product.findById(prodId);
-//     await req.user?.addToCart(product);
-//     res.redirect('/cart');
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
+// Add new products to the cart
+export async function postCart(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const prodId = req.body.productId;
+    const product = await Product.findById(prodId);
+    if (product) await req.user?.addToCart(product);
+    res.redirect('/cart');
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
 
 // export async function postCartDeleteProduct(
 //   req: Request,

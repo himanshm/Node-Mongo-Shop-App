@@ -1,22 +1,20 @@
-import express, {
-  Express,
-  Request as ExpressRequest,
-  Response,
-  NextFunction,
-} from 'express';
+import express, { Express, Request, Response, NextFunction } from 'express';
 import 'dotenv/config';
 import path from 'path';
 import bodyParser from 'body-parser';
 import adminRoutes from './routes/admin';
 import shopRoutes from './routes/shop';
-import User from './models/user';
-import { UserType } from './models/user';
+import User, { IUser } from './models/user';
 
 import { get404 } from './controllers/error';
 import mongooseConnect from './util/database';
 
-export interface Request extends ExpressRequest {
-  user?: UserType;
+declare global {
+  namespace Express {
+    interface Request {
+      user?: IUser;
+    }
+  }
 }
 
 const app: Express = express();

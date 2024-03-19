@@ -1,40 +1,43 @@
-import { ObjectId } from 'mongodb';
-import mongoose, { Types, Schema, Model } from 'mongoose';
+import mongoose, { Document, Model, Schema, Types } from 'mongoose';
+import { ProductType } from './product';
 
-interface CartItem {
-  productId: ObjectId;
+interface ICartItem {
+  productId?: Types.ObjectId;
   quantity: number;
 }
 
-interface Cart {
-  items: Types.DocumentArray<CartItem>;
+interface Cart extends Document {
+  // items: Types.DocumentArray<ICartItem>;
+  items: ICartItem[];
 }
 
-export interface UserType {
+export interface IUser extends Document, IUserMethods {
   name: string;
   email: string;
   cart: Cart;
-  _id?: string;
 }
 
-type UserModelType = Model<UserType>;
+interface IUserMethods {
+  addToCart: (product: ProductType) => Promise<void>;
+  // Add other methods here if needed
+}
 
-const userSchema = new Schema<UserType, UserModelType>({
+type UserModel = Model<IUser, {}, IUserMethods>;
+
+const userSchema = new Schema<IUser, UserModel, IUserMethods>({
   name: {
     type: String,
     required: true,
   },
-
   email: {
     type: String,
     required: true,
   },
-
   cart: {
     items: [
       {
         productId: {
-          type: Types.ObjectId,
+          type: Schema.Types.ObjectId,
           ref: 'Product',
           required: true,
         },
@@ -47,7 +50,29 @@ const userSchema = new Schema<UserType, UserModelType>({
   },
 });
 
-const User = mongoose.model<UserType, UserModelType>('User', userSchema);
+userSchema.method('addToCart', async function (product: ProductType) {
+  const cartProductIndex = this.cart.items.findIndex((cp) => {
+    return cp.productId?.toString() === product._id?.toString();
+  });
+
+  let newQuantity = 1;
+  const updatedCartItems = [...this.cart.items];
+
+  if (cartProductIndex >= 0) {
+    newQuantity = this.cart.items[cartProductIndex].quantity + 1;
+    updatedCartItems[cartProductIndex].quantity = newQuantity;
+  } else {
+    updatedCartItems.push({
+      productId: product._id,
+      quantity: newQuantity,
+    });
+  }
+
+  this.cart.items = updatedCartItems;
+  await this.save();
+});
+
+const User = mongoose.model<IUser, UserModel>('User', userSchema);
 
 export default User;
 
