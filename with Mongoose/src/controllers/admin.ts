@@ -111,20 +111,20 @@ export async function getProducts(
   }
 }
 
-// export async function postDeleteProduct(
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) {
-//   try {
-//     const prodId = req.body.productId;
+export async function postDeleteProduct(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const prodId: string = req.body.productId;
 
-//     await Product.deleteById(prodId);
+    await Product.findByIdAndDelete(prodId);
 
-//     console.log('DESTROYED PRODUCT!');
-//     res.redirect('/admin/products');
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
+    console.log('DESTROYED PRODUCT!');
+    res.redirect('/admin/products');
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
