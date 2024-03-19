@@ -4,6 +4,7 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import adminRoutes from './routes/admin';
 import shopRoutes from './routes/shop';
+import authRoutes from './routes/auth';
 import User, { IUser } from './models/user';
 
 import { get404 } from './controllers/error';
@@ -41,6 +42,7 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
+app.use(authRoutes);
 
 app.use(get404);
 
