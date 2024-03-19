@@ -148,21 +148,25 @@ export async function postOrder(
   }
 }
 
-// export async function getOrders(
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) {
-//   try {
-//     const orders = await req.user?.getOrders();
+export async function getOrders(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    if (!req.user) {
+      throw new Error('No user found!');
+    }
 
-//     res.render('shop/orders', {
-//       path: '/orders',
-//       pageTitle: 'Your Orders',
-//       orders: orders,
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
+    const orders = await Order.find({ 'user.userId': req.user._id });
+
+    res.render('shop/orders', {
+      path: '/orders',
+      pageTitle: 'Your Orders',
+      orders: orders,
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
