@@ -1,18 +1,52 @@
-// import { ObjectId } from 'mongodb';
-// import { getDb } from '../util/database';
-// import Product from './product';
+import mongoose, { Types, Schema, Model } from 'mongoose';
 
-// interface CartItem {
-//   productId: ObjectId;
-//   quantity: number;
-// }
-// interface Cart {
-//   items: CartItem[];
-// }
-// interface OrderItem {
-//   product: Product;
-//   quantity: number;
-// }
+interface CartItem {
+  productId: Types.ObjectId;
+  quantity: number;
+}
+
+interface Cart {
+  items: Types.DocumentArray<CartItem>;
+}
+
+export interface UserType {
+  name: string;
+  email: string;
+  cart: Cart;
+}
+
+type UserModelType = Model<UserType>;
+
+const userSchema = new Schema<UserType, UserModelType>({
+  name: {
+    type: String,
+    required: true,
+  },
+
+  email: {
+    type: String,
+    required: true,
+  },
+
+  cart: {
+    items: [
+      {
+        productId: {
+          type: Types.ObjectId,
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
+  },
+});
+
+const User = mongoose.model<UserType, UserModelType>('User', userSchema);
+
+export default User;
 
 // interface Order {
 //   products: Product[];
