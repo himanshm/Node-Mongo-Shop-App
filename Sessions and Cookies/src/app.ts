@@ -11,11 +11,16 @@ import session from 'express-session';
 import { get404 } from './controllers/error';
 import mongooseConnect from './util/database';
 
+declare module 'express-session' {
+  interface SessionData {
+    isLoggedIn?: boolean;
+  }
+}
+
 declare global {
   namespace Express {
     interface Request {
       user?: IUser;
-      isLoggedIn?: boolean;
     }
   }
 }
@@ -36,7 +41,7 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
     const user = await User.findById('65f970493d4975e60c1015ca');
     if (user) {
       req.user = user;
-      req.isLoggedIn = false;
+      req.session.isLoggedIn = false;
     }
     next();
   } catch (error) {

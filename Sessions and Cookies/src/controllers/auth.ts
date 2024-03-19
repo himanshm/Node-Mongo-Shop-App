@@ -5,12 +5,12 @@ export async function getLogin(
   res: Response,
   next: NextFunction
 ) {
-  const isLoggedIn = req.get('Cookie')?.trim().split('=')[1];
   try {
+    console.log(req.session);
     res.render('auth/login', {
       path: '/login',
       pageTitle: 'Login',
-      isAuthenticated: isLoggedIn,
+      isAuthenticated: req.session.isLoggedIn,
     });
   } catch (err) {
     console.log(err);
@@ -24,7 +24,7 @@ export async function postLogin(
   next: NextFunction
 ) {
   try {
-    res.setHeader('Set-Cookie', 'loggedIn=true');
+    req.session.isLoggedIn = true;
     res.redirect('/');
   } catch (err) {
     console.log(err);
