@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = await User.findById('65f93b232eb2099ea4a9c6a1');
+    const user = await User.findById('65f970493d4975e60c1015ca');
     if (user) {
       req.user = user;
     }
@@ -47,13 +47,15 @@ app.use(get404);
 async function initialize() {
   try {
     await mongooseConnect();
-    const user = User.findOne();
-    if (!user) {
+    const existingUser = await User.findOne();
+    if (!existingUser) {
       const user = new User({
         name: 'Himansh',
         email: 'himansh@example.com',
         cart: { items: [] },
       });
+
+      console.log(user);
 
       await user.save();
     }

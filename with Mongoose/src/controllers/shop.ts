@@ -62,19 +62,21 @@ export async function getIndex(
   }
 }
 
-// export async function getCart(req: Request, res: Response, next: NextFunction) {
-//   try {
-//     const products = await req.user?.getCart();
-//     res.render('shop/cart', {
-//       path: '/cart',
-//       pageTitle: 'Your Cart',
-//       products: products,
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
+export async function getCart(req: Request, res: Response, next: NextFunction) {
+  try {
+    const user = await req.user?.populate('cart.items.productId');
+    console.log(user?.cart.items);
+    const products = user?.cart.items;
+    res.render('shop/cart', {
+      path: '/cart',
+      pageTitle: 'Your Cart',
+      products: products,
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
 
 // Add new products to the cart
 export async function postCart(

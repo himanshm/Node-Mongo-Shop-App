@@ -131,7 +131,7 @@ export default User;
 //       );
 //   }
 
-//   async getCart() {
+//   async functiongetCart() {
 //     const db = getDb();
 //     const productIds = this.cart.items.map((item) => {
 //       return item.productId;

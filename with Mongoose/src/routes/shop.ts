@@ -3,7 +3,7 @@ import {
   getProducts,
   getIndex,
   getProduct,
-  //   getCart,
+  getCart,
   postCart,
   //   postCartDeleteProduct,
   //   postOrder,
@@ -18,7 +18,7 @@ router.get('/products', getProducts);
 
 router.get('/products/:productId', getProduct);
 
-// router.get('/cart', getCart);
+router.get('/cart', getCart);
 
 router.post('/cart', postCart);
 
