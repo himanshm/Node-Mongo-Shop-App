@@ -5,7 +5,7 @@ import {
   getProduct,
   getCart,
   postCart,
-  //   postCartDeleteProduct,
+  postCartDeleteProduct,
   //   postOrder,
   //   getOrders,
 } from '../controllers/shop';
@@ -22,7 +22,7 @@ router.get('/cart', getCart);
 
 router.post('/cart', postCart);
 
-// router.post('/cart-delete-item', postCartDeleteProduct);
+router.post('/cart-delete-item', postCartDeleteProduct);
 
 // router.post('/create-order', postOrder);
 

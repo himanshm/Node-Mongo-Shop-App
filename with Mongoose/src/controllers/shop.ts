@@ -95,20 +95,20 @@ export async function postCart(
   }
 }
 
-// export async function postCartDeleteProduct(
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) {
-//   try {
-//     const prodId = req.body.productId;
-//     await req.user?.deleteItemsFromCart(prodId);
-//     res.redirect('/cart');
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
+export async function postCartDeleteProduct(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const prodId = req.body.productId;
+    await req.user?.removeFromCart(prodId);
+    res.redirect('/cart');
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
 
 // export async function postOrder(
 //   req: Request,
