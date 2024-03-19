@@ -6,6 +6,7 @@ import adminRoutes from './routes/admin';
 import shopRoutes from './routes/shop';
 import authRoutes from './routes/auth';
 import User, { IUser } from './models/user';
+import session from 'express-session';
 
 import { get404 } from './controllers/error';
 import mongooseConnect from './util/database';
@@ -26,6 +27,9 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+  session({ secret: 'my secret key', resave: false, saveUninitialized: false })
+);
 
 app.use(async (req: Request, res: Response, next: NextFunction) => {
   try {
