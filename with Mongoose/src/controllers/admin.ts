@@ -30,92 +30,86 @@ export async function postAddProduct(
   }
 }
 
-// export async function getEditProduct(
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) {
-//   try {
-//     const editMode = req.query.edit;
-//     if (!editMode) {
-//       return res.redirect('/');
-//     }
+export async function getEditProduct(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const editMode = req.query.edit;
+    if (!editMode) {
+      return res.redirect('/');
+    }
 
-//     const prodId = req.params.productId;
-//     console.log('getProductId', prodId);
-//     const product = await Product.findById(prodId);
+    const prodId = req.params.productId;
+    const product = await Product.findById(prodId);
 
-//     if (!product) {
-//       return res.redirect('/');
-//     }
+    if (!product) {
+      return res.redirect('/');
+    }
 
-//     res.render('admin/edit-product', {
-//       pageTitle: 'Edit Product',
-//       path: '/admin/edit-product',
-//       editing: editMode,
-//       product: product,
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
+    res.render('admin/edit-product', {
+      pageTitle: 'Edit Product',
+      path: '/admin/edit-product',
+      editing: editMode,
+      product: product,
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
 
-// export async function postEditProduct(
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) {
-//   try {
-//     let userId: string | undefined;
-//     const prodId: ObjectId = req.body.productId;
-//     console.log('postEditProductId:', prodId);
-//     const updatedTitle: string = req.body.title;
-//     const updatedPrice: number = req.body.price;
-//     const updatedImageUrl: string = req.body.imageUrl;
-//     const updatedDesc: string = req.body.description;
+export async function postEditProduct(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const prodId: string = req.body.productId;
+    const updatedTitle: string = req.body.title;
+    const updatedPrice: number = req.body.price;
+    const updatedImageUrl: string = req.body.imageUrl;
+    const updatedDesc: string = req.body.description;
 
-//     if (req.user) {
-//       userId = req.user._id?.toString();
-//     }
+    const product = await Product.findById(prodId);
+    if (!product) {
+      throw new Error('Product not found!');
+    }
 
-//     const product = new Product(
-//       updatedTitle,
-//       updatedImageUrl,
-//       updatedPrice,
-//       updatedDesc,
-//       prodId,
-//       userId
-//     );
+    product.title = updatedTitle;
+    product.price = updatedPrice;
+    product.imageUrl = updatedImageUrl;
+    product.description = updatedDesc;
 
-//     await product.save();
+    await product.save();
 
-//     console.log('UPDATED PRODUCT!');
-//     res.redirect('/admin/products');
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
+    console.log('UPDATED PRODUCT!');
+    res.redirect('/admin/products');
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
 
-// export async function getProducts(
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) {
-//   try {
-//     const products = await Product.fetchAll();
+export async function getProducts(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const products = await Product.find();
 
-//     res.render('admin/products', {
-//       prods: products,
-//       pageTitle: 'Admin Products',
-//       path: '/admin/products',
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// }
+    res.render('admin/products', {
+      prods: products,
+      pageTitle: 'Admin Products',
+      path: '/admin/products',
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
 
 // export async function postDeleteProduct(
 //   req: Request,
