@@ -141,6 +141,7 @@ export async function postOrder(
       products: products,
     });
     await order.save();
+    req.user.clearCart();
     res.redirect('/orders');
   } catch (err) {
     console.log(err);

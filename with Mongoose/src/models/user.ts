@@ -20,6 +20,7 @@ export interface IUser extends Document, IUserMethods {
 interface IUserMethods {
   addToCart: (product: ProductType) => Promise<void>;
   removeFromCart: (productId: Types.ObjectId) => Promise<void>;
+  clearCart: () => Promise<void>;
 }
 
 type UserModel = Model<IUser, {}, IUserMethods>;
@@ -48,6 +49,11 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
       },
     ],
   },
+});
+
+userSchema.method('clearCart', async function () {
+  this.cart.items = [];
+  await this.save();
 });
 
 userSchema.method('removeFromCart', async function (productId: Types.ObjectId) {
