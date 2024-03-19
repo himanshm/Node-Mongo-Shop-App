@@ -34,7 +34,6 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
       req.user = user;
       req.isLoggedIn = false;
     }
-    console.log(user);
     next();
   } catch (error) {
     console.log(error);
