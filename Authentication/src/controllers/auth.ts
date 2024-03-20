@@ -41,23 +41,29 @@ export async function postLogin(
   res: Response,
   next: NextFunction
 ) {
+  const { email, password } = req.body;
   try {
-    const user = await User.findById('65f970493d4975e60c1015ca');
-    if (user) {
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.redirect('/login');
+    }
+
+    const doMatch = await bcrypt.compare(password, user.password);
+    if (doMatch) {
       req.session.isLoggedIn = true;
       req.session.user = user;
       req.session.save((err) => {
         if (err) {
           console.log(err);
-        } else res.redirect('/');
+        }
+        res.redirect('/');
       });
     } else {
-      // Handle case where user is not found
-      res.status(404).send('User not found');
+      res.redirect('/login');
     }
   } catch (err) {
     console.log(err);
-    next(err);
+    res.redirect('/login');
   }
 }
 
