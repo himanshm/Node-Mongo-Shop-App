@@ -29,7 +29,11 @@ export async function postLogin(
     if (user) {
       req.session.isLoggedIn = true;
       req.session.user = user;
-      res.redirect('/');
+      req.session.save((err) => {
+        if (err) {
+          console.log(err);
+        } else res.redirect('/');
+      });
     } else {
       // Handle case where user is not found
       res.status(404).send('User not found');
