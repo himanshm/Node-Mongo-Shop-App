@@ -14,7 +14,6 @@ export async function getProducts(
       prods: products,
       pageTitle: 'All Products',
       path: '/products',
-      isAuthenticated: req.session.isLoggedIn,
     });
   } catch (err) {
     console.log(err);
@@ -38,7 +37,6 @@ export async function getProduct(
       product: product,
       pageTitle: product.title,
       path: '/products',
-      isAuthenticated: req.session.isLoggedIn,
     });
   } catch (error) {
     console.log(error);
@@ -57,7 +55,6 @@ export async function getIndex(
       prods: products,
       pageTitle: 'Shop',
       path: '/',
-      isAuthenticated: req.session.isLoggedIn,
     });
   } catch (err) {
     console.log(err);
@@ -73,7 +70,6 @@ export async function getCart(req: Request, res: Response, next: NextFunction) {
       path: '/cart',
       pageTitle: 'Your Cart',
       products: products,
-      isAuthenticated: req.session.isLoggedIn,
     });
   } catch (err) {
     console.log(err);
@@ -167,7 +163,6 @@ export async function getOrders(
       path: '/orders',
       pageTitle: 'Your Orders',
       orders: orders,
-      isAuthenticated: req.session.isLoggedIn,
     });
   } catch (err) {
     console.log(err);

@@ -1,11 +1,18 @@
 // Import the required modules
 
-import express, { Express, Request, Response, NextFunction } from 'express';
+import express, {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from 'express';
 import 'dotenv/config';
 import path from 'path';
 import session from 'express-session';
 import { default as connectMongoDBSession } from 'connect-mongodb-session';
 import bodyParser from 'body-parser';
+// import { csrfSync } from 'csrf-sync';
 
 import adminRoutes from './routes/admin';
 import shopRoutes from './routes/shop';
@@ -59,6 +66,8 @@ store.on('error', (error) => {
   console.error('Session store error:', error);
 });
 
+// const { csrfSynchronisedProtection } = csrfSync();
+
 app.use(
   session({
     secret: 'my secret key',
@@ -67,6 +76,8 @@ app.use(
     store: store,
   })
 );
+
+// app.use(csrfSynchronisedProtection);
 
 // Middleware and Routes
 
@@ -87,6 +98,14 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
     console.log(err);
     next(err);
   }
+});
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  // if (req.csrfToken) {
+  //   res.locals.csrfToken = req.csrfToken();
+  // }
+  next();
 });
 
 app.use(authRoutes);

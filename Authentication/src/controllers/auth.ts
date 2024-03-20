@@ -1,12 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../models/user';
 
-export async function getLogin(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export const getLogin: RequestHandler = (req, res, next) => {
   try {
     res.render('auth/login', {
       path: '/login',
@@ -17,13 +13,9 @@ export async function getLogin(
     console.log(err);
     next(err);
   }
-}
+};
 
-export async function getSignup(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export const getSignup: RequestHandler = (req, res, next) => {
   try {
     res.render('auth/signup', {
       path: '/signup',
@@ -34,7 +26,7 @@ export async function getSignup(
     console.log(err);
     next(err);
   }
-}
+};
 
 export async function postLogin(
   req: Request,
