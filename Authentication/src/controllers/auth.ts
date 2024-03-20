@@ -7,10 +7,26 @@ export async function getLogin(
   next: NextFunction
 ) {
   try {
-    console.log(req.session);
     res.render('auth/login', {
       path: '/login',
       pageTitle: 'Login',
+      isAuthenticated: false,
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
+
+export async function getSignup(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    res.render('auth/signup', {
+      path: '/signup',
+      pageTitle: 'Signup',
       isAuthenticated: false,
     });
   } catch (err) {
@@ -43,6 +59,8 @@ export async function postLogin(
     next(err);
   }
 }
+
+export function postSignup(req: Request, res: Response, next: NextFunction) {}
 
 export function postLogout(req: Request, res: Response, next: NextFunction) {
   req.session.destroy((err) => {
