@@ -19,9 +19,11 @@ import mongooseConnect from './util/database';
 declare module 'express-session' {
   interface SessionData {
     isLoggedIn?: boolean;
+    user?: IUser;
   }
 }
 
+// Don't need it
 declare global {
   namespace Express {
     interface Request {
@@ -70,21 +72,26 @@ app.use(
 
 app.use(async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = await User.findById('65f970493d4975e60c1015ca');
+    if (!req.session.user) {
+      return next();
+    }
+    const user = await User.findById(req.session.user._id);
     if (user) {
       req.user = user;
-      // req.session.isLoggedIn = false;
+      next();
+    } else {
+      // Handle case where user is not found
+      res.status(404).send('User not found');
     }
-    next();
-  } catch (error) {
-    console.log(error);
-    next(error);
+  } catch (err) {
+    console.log(err);
+    next(err);
   }
 });
 
+app.use(authRoutes);
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
-app.use(authRoutes);
 
 // Error Handling Middleware
 
