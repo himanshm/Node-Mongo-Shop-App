@@ -139,7 +139,6 @@ export async function postOrder(
 
     const order = new Order({
       user: {
-        name: req.user.name,
         userId: req.user,
       },
       products: products,

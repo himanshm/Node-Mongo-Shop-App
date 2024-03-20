@@ -60,7 +60,31 @@ export async function postLogin(
   }
 }
 
-export function postSignup(req: Request, res: Response, next: NextFunction) {}
+export async function postSignup(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { email, password, confirmPassword } = req.body;
+  try {
+    const userDoc = await User.findOne({ email: email });
+    if (userDoc) {
+      return res.redirect('/signup');
+    }
+
+    const user = new User({
+      email: email,
+      password: password,
+      cart: { items: [] },
+    });
+
+    await user.save();
+    res.redirect('/login');
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+}
 
 export function postLogout(req: Request, res: Response, next: NextFunction) {
   req.session.destroy((err) => {
