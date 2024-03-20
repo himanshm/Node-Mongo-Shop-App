@@ -102,17 +102,6 @@ app.use(get404);
 async function initialize() {
   try {
     await mongooseConnect();
-    // Not needed anymore after implementing Authentication flow and adding a signup user logic
-    // const existingUser = await User.findOne();
-    // if (!existingUser) {
-    //   const user = new User({
-    //     name: 'Himansh',
-    //     email: 'himansh@example.com',
-    //     cart: { items: [] },
-    //   });
-
-    //   await user.save();
-    // }
 
     app.listen(3000);
     console.log('Server is listening on port 3000.');

@@ -12,6 +12,7 @@
   "author": "Himanshu Mishra",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "connect-mongodb-session": "^5.0.0",
     "dotenv": "^16.4.5",
@@ -22,6 +23,7 @@
     "mongoose": "^8.2.2"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/connect-mongodb-session": "^2.4.7",
     "@types/express": "^4.17.21",
     "@types/express-session": "^1.18.0",
