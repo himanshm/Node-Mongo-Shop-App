@@ -135,6 +135,7 @@ export async function postOrder(
 
     const order = new Order({
       user: {
+        email: req.user.email,
         userId: req.user,
       },
       products: products,

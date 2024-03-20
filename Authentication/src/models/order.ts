@@ -3,7 +3,6 @@ import { ProductType } from './product';
 
 interface IUser {
   _id: Types.ObjectId;
-  name: string;
   email: string;
 }
 
@@ -27,7 +26,7 @@ const orderSchema = new Schema<IOrder>({
     },
   ],
   user: {
-    name: {
+    email: {
       type: String,
       required: true,
     },
