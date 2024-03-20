@@ -31,3 +31,14 @@ export async function postLogin(
     next(err);
   }
 }
+
+export function postLogout(req: Request, res: Response, next: NextFunction) {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      next(err);
+    } else {
+      res.redirect('/');
+    }
+  });
+}

@@ -1,3 +1,7 @@
+## Session - Cookies
+
+Saving data across requests
+
 ```
 import { default as connectMongoDBSession} from 'connect-mongodb-session';
 
