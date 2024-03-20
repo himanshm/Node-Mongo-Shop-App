@@ -4,6 +4,10 @@ import { ProductType } from '../models/product';
 // import { ObjectId } from 'mongodb';
 
 export function getAddProduct(req: Request, res: Response, next: NextFunction) {
+  if (!req.session.isLoggedIn) {
+    return res.redirect('/login');
+  }
+
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
     path: '/admin/add-product',
