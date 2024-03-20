@@ -4,10 +4,15 @@ import User from '../models/user';
 
 export const getLogin: RequestHandler = (req, res, next) => {
   try {
+    let message: string[] = req.flash('error');
+    if (message.length > 0) {
+      message = [message[0]];
+    }
+
     res.render('auth/login', {
       path: '/login',
       pageTitle: 'Login',
-      isAuthenticated: false,
+      errorMessage: message.length > 0 ? message[0] : null,
     });
   } catch (err) {
     console.log(err);
@@ -17,10 +22,14 @@ export const getLogin: RequestHandler = (req, res, next) => {
 
 export const getSignup: RequestHandler = (req, res, next) => {
   try {
+    let message: string[] = req.flash('error');
+    if (message.length > 0) {
+      message = [message[0]];
+    }
     res.render('auth/signup', {
       path: '/signup',
       pageTitle: 'Signup',
-      isAuthenticated: false,
+      errorMessage: message.length > 0 ? message[0] : null,
     });
   } catch (err) {
     console.log(err);
@@ -37,6 +46,7 @@ export async function postLogin(
   try {
     const user = await User.findOne({ email: email });
     if (!user) {
+      req.flash('error', 'Invalid email or password!');
       return res.redirect('/login');
     }
 
@@ -51,6 +61,7 @@ export async function postLogin(
         res.redirect('/');
       });
     } else {
+      req.flash('error', 'Invalid email or password!');
       res.redirect('/login');
     }
   } catch (err) {
@@ -69,6 +80,7 @@ export async function postSignup(
     const hashedPassword = await bcrypt.hash(password, 12);
     const userDoc = await User.findOne({ email: email });
     if (userDoc) {
+      req.flash('error', 'Email exists already, Please pick a different one!');
       return res.redirect('/signup');
     }
 

@@ -12,6 +12,7 @@ import path from 'path';
 import session from 'express-session';
 import { default as connectMongoDBSession } from 'connect-mongodb-session';
 import bodyParser from 'body-parser';
+import flash from 'connect-flash';
 // import { csrfSync } from 'csrf-sync';
 
 import adminRoutes from './routes/admin';
@@ -78,6 +79,7 @@ app.use(
 );
 
 // app.use(csrfSynchronisedProtection);
+app.use(flash());
 
 // Middleware and Routes
 
