@@ -15,6 +15,8 @@ export interface IUser extends Document, IUserMethods {
   email: string;
   password: string;
   cart: Cart;
+  resetToken?: string;
+  resetTokenExpiration: Date;
 }
 
 interface IUserMethods {
@@ -34,6 +36,8 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     type: String,
     required: true,
   },
+  resetToken: String,
+  resetTokenExpiration: Date,
   cart: {
     items: [
       {

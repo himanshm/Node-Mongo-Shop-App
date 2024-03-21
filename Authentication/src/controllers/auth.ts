@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
+import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 import User from '../models/user';
+import { promisify } from 'util';
+
+const randomBytesAsync = promisify(crypto.randomBytes);
 
 const transporter = nodemailer.createTransport({
   host: 'smtp-relay.sendinblue.com',
@@ -136,4 +140,40 @@ export const getReset: RequestHandler = (req, res, next) => {
     pageTitle: 'Reset Password',
     errorMessage: message.length > 0 ? message[0] : null,
   });
+};
+
+export const postReset: RequestHandler = async (req, res, next) => {
+  try {
+    const buffer = await randomBytesAsync(32);
+    const token = buffer.toString('hex');
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
+      req.flash('error', 'No account with that email found!');
+      return res.redirect('/reset');
+    }
+
+    user.resetToken = token;
+    user.resetTokenExpiration = new Date(Date.now() + 3600000); // now + 1 hour
+    await user.save();
+
+    res.redirect('/');
+    await transporter.sendMail({
+      from: 'shop@node-complete.com',
+      to: req.body.email,
+      subject: `Password Reset`,
+      html: `<p>You requested a password reset</p>
+             <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password.</p>`,
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+  // crypto.randomBytes(32, async (err, buffer) => {
+  //   if (err) {
+  //     console.log(err);
+  //     return res.redirect('/reset');
+  //   }
+
+  //   const token = buffer.toString('hex');
 };
