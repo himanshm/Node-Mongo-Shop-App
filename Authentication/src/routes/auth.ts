@@ -5,12 +5,15 @@ import {
   postLogout,
   getSignup,
   postSignup,
+  getReset,
 } from '../controllers/auth';
 const router = Router();
 
 router.get('/login', getLogin);
 
 router.get('/signup', getSignup);
+
+router.get('/reset', getReset);
 
 router.post('/login', postLogin);
 

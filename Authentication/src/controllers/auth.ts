@@ -125,3 +125,15 @@ export function postLogout(req: Request, res: Response, next: NextFunction) {
     }
   });
 }
+
+export const getReset: RequestHandler = (req, res, next) => {
+  let message: string[] = req.flash('error');
+  if (message.length > 0) {
+    message = [message[0]];
+  }
+  res.render('auth/reset', {
+    path: '/reset',
+    pageTitle: 'Reset Password',
+    errorMessage: message.length > 0 ? message[0] : null,
+  });
+};
