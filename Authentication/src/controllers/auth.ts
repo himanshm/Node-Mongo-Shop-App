@@ -201,7 +201,37 @@ export const getNewPassword: RequestHandler = async (req, res, next) => {
       pageTitle: 'New Password',
       errorMessage: message.length > 0 ? message[0] : null,
       userId: user._id.toString(),
+      passwordToken: token,
     });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+export const postNewPassword: RequestHandler = async (req, res, next) => {
+  try {
+    const { userId, newPassword, passwordToken } = req.body;
+    console.log(userId, newPassword, passwordToken);
+
+    const user = await User.findOne({
+      resetToken: passwordToken,
+      resetTokenExpiration: { $gt: Date.now() },
+      _id: userId,
+    });
+
+    if (!user) {
+      req.flash('error', 'No user found!');
+      return res.redirect('/reset');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    user.password = hashedPassword;
+    user.resetToken = undefined;
+    user.resetTokenExpiration = undefined;
+
+    await user.save();
+    res.redirect('/login');
   } catch (err) {
     console.log(err);
     next(err);

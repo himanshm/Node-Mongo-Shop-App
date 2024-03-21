@@ -8,6 +8,7 @@ import {
   getReset,
   postReset,
   getNewPassword,
+  postNewPassword,
 } from '../controllers/auth';
 const router = Router();
 
@@ -26,5 +27,7 @@ router.post('/signup', postSignup);
 router.post('/logout', postLogout);
 
 router.post('/reset', postReset);
+
+router.post('/new-password', postNewPassword);
 
 export default router;

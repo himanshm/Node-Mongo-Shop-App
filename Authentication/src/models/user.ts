@@ -16,7 +16,7 @@ export interface IUser extends Document, IUserMethods {
   password: string;
   cart: Cart;
   resetToken?: string;
-  resetTokenExpiration: Date;
+  resetTokenExpiration?: Date;
 }
 
 interface IUserMethods {
