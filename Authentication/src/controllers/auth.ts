@@ -177,3 +177,33 @@ export const postReset: RequestHandler = async (req, res, next) => {
 
   //   const token = buffer.toString('hex');
 };
+
+export const getNewPassword: RequestHandler = async (req, res, next) => {
+  let message: string[] = req.flash('error');
+  if (message.length > 0) {
+    message = [message[0]];
+  }
+
+  try {
+    const token = req.params.token;
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiration: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      req.flash('error', 'No user found! The token is probably expired!');
+      return res.redirect('/reset');
+    }
+
+    res.render('auth/new-password', {
+      path: '/new-password',
+      pageTitle: 'New Password',
+      errorMessage: message.length > 0 ? message[0] : null,
+      userId: user._id.toString(),
+    });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
