@@ -88,6 +88,14 @@ export async function postEditProduct(
       throw new Error('Product not found!');
     }
 
+    if (!req.user) {
+      throw new Error('User not found!');
+    }
+
+    if (product.userId.toString() !== req.user._id.toString()) {
+      return res.redirect('/');
+    }
+
     product.title = updatedTitle;
     product.price = updatedPrice;
     product.imageUrl = updatedImageUrl;
@@ -128,7 +136,7 @@ export async function postDeleteProduct(
   try {
     const prodId: string = req.body.productId;
 
-    await Product.findByIdAndDelete(prodId);
+    await Product.deleteOne({ _id: prodId, userId: req.user?._id });
 
     console.log('DESTROYED PRODUCT!');
     res.redirect('/admin/products');
