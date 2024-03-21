@@ -1,6 +1,16 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import bcrypt from 'bcryptjs';
+import nodemailer from 'nodemailer';
 import User from '../models/user';
+
+const transporter = nodemailer.createTransport({
+  host: 'smtp-relay.sendinblue.com',
+  port: 587,
+  auth: {
+    user: 'sai.himanshum011@gmail.com',
+    pass: 'xsmtpsib-57665c015e95c2fae23b42669d55a437d2bcc22d442fcaa67ec5b345013871f5-5jGED6wvJAxmRBIW',
+  },
+});
 
 export const getLogin: RequestHandler = (req, res, next) => {
   try {
@@ -76,6 +86,12 @@ export async function postSignup(
   next: NextFunction
 ) {
   const { email, password, confirmPassword } = req.body;
+  const mailOptions = {
+    from: 'shop@node-complete.com',
+    to: email,
+    subject: `Signup Succeeded`,
+    html: `<h1>You successfully signed up!</h1>`,
+  };
   try {
     const hashedPassword = await bcrypt.hash(password, 12);
     const userDoc = await User.findOne({ email: email });
@@ -91,6 +107,7 @@ export async function postSignup(
     });
 
     await user.save();
+    await transporter.sendMail(mailOptions);
     res.redirect('/login');
   } catch (err) {
     console.log(err);
