@@ -2,8 +2,10 @@ import { Request, Response, NextFunction, RequestHandler } from 'express';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
-import User from '../models/user';
 import { promisify } from 'util';
+import { validationResult } from 'express-validator';
+
+import User from '../models/user';
 
 const randomBytesAsync = promisify(crypto.randomBytes);
 
@@ -90,6 +92,16 @@ export async function postSignup(
   next: NextFunction
 ) {
   const { email, password, confirmPassword } = req.body;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    console.log(errors.array());
+    res.status(422).render('auth/signup', {
+      path: '/signup',
+      pageTitle: 'Signup',
+      errorMessage: errors.array(),
+    });
+  }
   const mailOptions = {
     from: 'shop@node-complete.com',
     to: email,

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { check } from 'express-validator';
 import {
   getLogin,
   postLogin,
@@ -23,7 +24,7 @@ router.get('/reset/:token', getNewPassword);
 
 router.post('/login', csrfValidate, postLogin);
 
-router.post('/signup', csrfValidate, postSignup);
+router.post('/signup', csrfValidate, check('email').isEmail(), postSignup);
 
 router.post('/logout', csrfValidate, postLogout);
 
