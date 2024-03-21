@@ -24,7 +24,12 @@ router.get('/reset/:token', getNewPassword);
 
 router.post('/login', csrfValidate, postLogin);
 
-router.post('/signup', csrfValidate, check('email').isEmail(), postSignup);
+router.post(
+  '/signup',
+  csrfValidate,
+  check('email').isEmail().withMessage('Please enter a valid email!'),
+  postSignup
+);
 
 router.post('/logout', csrfValidate, postLogout);
 

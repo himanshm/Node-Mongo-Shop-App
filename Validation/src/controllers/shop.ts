@@ -9,7 +9,6 @@ export async function getProducts(
 ) {
   try {
     const products = await Product.find();
-    console.log(products);
     res.render('shop/product-list', {
       prods: products,
       pageTitle: 'All Products',
