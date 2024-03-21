@@ -10,6 +10,7 @@ import {
   getNewPassword,
   postNewPassword,
 } from '../controllers/auth';
+import { csrfValidate } from '../config/csrf-protection';
 const router = Router();
 
 router.get('/login', getLogin);
@@ -20,14 +21,14 @@ router.get('/reset', getReset);
 
 router.get('/reset/:token', getNewPassword);
 
-router.post('/login', postLogin);
+router.post('/login', csrfValidate, postLogin);
 
-router.post('/signup', postSignup);
+router.post('/signup', csrfValidate, postSignup);
 
-router.post('/logout', postLogout);
+router.post('/logout', csrfValidate, postLogout);
 
-router.post('/reset', postReset);
+router.post('/reset', csrfValidate, postReset);
 
-router.post('/new-password', postNewPassword);
+router.post('/new-password', csrfValidate, postNewPassword);
 
 export default router;

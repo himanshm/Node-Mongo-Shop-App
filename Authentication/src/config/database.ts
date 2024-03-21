@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import 'dotenv/config';
 
-const mongooseConnect = async () => {
+export const mongooseConnect = async () => {
   const connectionString = process.env.MONGODB_URI;
 
   if (!connectionString) {
@@ -16,5 +16,3 @@ const mongooseConnect = async () => {
     throw error;
   }
 };
-
-export default mongooseConnect;
