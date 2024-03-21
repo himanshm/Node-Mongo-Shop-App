@@ -1,6 +1,7 @@
 import Product from '../models/product';
 import { Request, Response, NextFunction } from 'express';
 import { ProductType } from '../models/product';
+import { RequestHandler } from 'express-serve-static-core';
 // import { ObjectId } from 'mongodb';
 
 export function getAddProduct(req: Request, res: Response, next: NextFunction) {
@@ -102,13 +103,12 @@ export async function postEditProduct(
   }
 }
 
-export async function getProducts(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export const getProducts: RequestHandler = async (req, res, next) => {
   try {
-    const products = await Product.find();
+    if (!req.user) {
+      throw new Error('No user found!');
+    }
+    const products = await Product.find({ userId: req.user._id });
     res.render('admin/products', {
       prods: products,
       pageTitle: 'Admin Products',
@@ -118,7 +118,7 @@ export async function getProducts(
     console.log(err);
     next(err);
   }
-}
+};
 
 export async function postDeleteProduct(
   req: Request,
