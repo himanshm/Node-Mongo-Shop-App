@@ -47,6 +47,7 @@ export const getSignup: RequestHandler = (req, res, next) => {
       pageTitle: 'Signup',
       errorMessage: message.length > 0 ? message[0] : null,
       oldInput: { email: '', password: '', confirmPassword: '' },
+      validationErrors: [],
     });
   } catch (err) {
     console.log(err);
@@ -116,6 +117,7 @@ export async function postSignup(
         password: password,
         confirmPassword: confirmPassword,
       },
+      validationErrors: errors.array(),
     });
   }
   const mailOptions = {
