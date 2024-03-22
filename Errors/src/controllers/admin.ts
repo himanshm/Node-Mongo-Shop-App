@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { ProductType } from '../models/product';
 import { RequestHandler } from 'express-serve-static-core';
 import { validationResult } from 'express-validator';
+import HttpError from '../utils/httpError';
 // import { ObjectId } from 'mongodb';
 
 export function getAddProduct(req: Request, res: Response, next: NextFunction) {
@@ -72,7 +73,13 @@ export async function postAddProduct(
     //   errorMessage: 'Database operation failed, please try again.',
     //   validationErrors: []
     // });
-    res.redirect('/500');
+    // res.redirect('/500');
+
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 }
 
@@ -104,8 +111,11 @@ export async function getEditProduct(
       validationErrors: [],
     });
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 }
 

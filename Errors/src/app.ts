@@ -1,5 +1,5 @@
 // Import the required modules
-import express, { Express } from 'express';
+import express, { Express, ErrorRequestHandler } from 'express';
 import 'dotenv/config';
 import path from 'path';
 import session from 'express-session';
@@ -20,6 +20,7 @@ import { userAttachMiddleware } from './middleware/user-attach-middleware';
 import { csrfProtection } from './config/csrf-protection';
 
 import { IUser } from './models/user';
+import { error } from 'console';
 
 // Declare Modules and Interfaces
 declare module 'express-session' {
@@ -76,6 +77,26 @@ app.use(shopRoutes);
 // Error Handling Middleware
 app.get('/500', get500);
 app.use(get404);
+
+const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  // Log the error or handle it in any other way
+  console.error(err);
+
+  // If an error has a statusCode, use it. Otherwise, default to 500
+  // const statusCode = err.statusCode || 500;
+
+  // Send a response to the client
+  // res.status(statusCode).send({
+  //   error: {
+  //     message: err.message,
+  //     statusCode,
+  //   },
+  // });
+
+  res.redirect('/500');
+};
+
+app.use(errorHandler);
 
 // Server Initialization
 async function initialize() {
