@@ -10,7 +10,7 @@ import adminRoutes from './routes/admin';
 import shopRoutes from './routes/shop';
 import authRoutes from './routes/auth';
 // Import error controller
-import { get404 } from './controllers/error';
+import { get404, get500 } from './controllers/error';
 // Import session store configuration
 import { sessionStoreConfig } from './config/session-store';
 // Import database connection
@@ -74,7 +74,7 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
 // Error Handling Middleware
-
+app.get('/500', get500);
 app.use(get404);
 
 // Server Initialization
