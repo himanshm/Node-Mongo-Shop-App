@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Product from '../models/product';
 import Order from '../models/order';
+import HttpError from '../utils/httpError';
 
 export async function getProducts(
   req: Request,
@@ -15,8 +16,11 @@ export async function getProducts(
       path: '/products',
     });
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 }
 
@@ -38,8 +42,11 @@ export async function getProduct(
       path: '/products',
     });
   } catch (error) {
-    console.log(error);
-    next(error);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 }
 
@@ -56,8 +63,11 @@ export async function getIndex(
       path: '/',
     });
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 }
 
@@ -71,8 +81,11 @@ export async function getCart(req: Request, res: Response, next: NextFunction) {
       products: products,
     });
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 }
 
@@ -88,8 +101,11 @@ export async function postCart(
     if (product) await req.user?.addToCart(product);
     res.redirect('/cart');
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 }
 
@@ -103,8 +119,11 @@ export async function postCartDeleteProduct(
     await req.user?.removeFromCart(prodId);
     res.redirect('/cart');
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 }
 
@@ -143,7 +162,11 @@ export async function postOrder(
     req.user.clearCart();
     res.redirect('/orders');
   } catch (err) {
-    console.log(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 }
 
@@ -165,7 +188,10 @@ export async function getOrders(
       orders: orders,
     });
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 }
