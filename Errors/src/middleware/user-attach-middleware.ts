@@ -22,9 +22,13 @@ export const userAttachMiddleware: RequestHandler = async (req, res, next) => {
       next();
     } else {
       res.status(404).send('User not found');
+      next();
     }
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      throw new Error(err);
+    } else {
+      throw err; // Rethrow the original error
+    }
   }
 };
