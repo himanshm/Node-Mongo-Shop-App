@@ -9,14 +9,14 @@ import User from '../models/user';
 
 const randomBytesAsync = promisify(crypto.randomBytes);
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp-relay.sendinblue.com',
-  port: 587,
-  auth: {
-    user: 'sai.himanshum011@gmail.com',
-    pass: process.env.AUTH_KEY,
-  },
-});
+// const transporter = nodemailer.createTransport({
+//   host: 'smtp-relay.sendinblue.com',
+//   port: 587,
+//   auth: {
+//     user: 'sai.himanshum011@gmail.com',
+//     pass: process.env.AUTH_KEY,
+//   },
+// });
 
 export const getLogin: RequestHandler = (req, res, next) => {
   try {
@@ -167,7 +167,7 @@ export async function postSignup(
     });
 
     await user.save();
-    await transporter.sendMail(mailOptions);
+    // await transporter.sendMail(mailOptions);
     res.redirect('/login');
   } catch (err) {
     console.log(err);
@@ -214,13 +214,13 @@ export const postReset: RequestHandler = async (req, res, next) => {
     await user.save();
 
     res.redirect('/');
-    await transporter.sendMail({
-      from: 'shop@node-complete.com',
-      to: req.body.email,
-      subject: `Password Reset`,
-      html: `<p>You requested a password reset</p>
-             <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password.</p>`,
-    });
+    // await transporter.sendMail({
+    //   from: 'shop@node-complete.com',
+    //   to: req.body.email,
+    //   subject: `Password Reset`,
+    //   html: `<p>You requested a password reset</p>
+    //          <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password.</p>`,
+    // });
   } catch (err) {
     console.log(err);
     next(err);
