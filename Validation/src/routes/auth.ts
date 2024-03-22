@@ -23,7 +23,22 @@ router.get('/reset', getReset);
 
 router.get('/reset/:token', getNewPassword);
 
-router.post('/login', csrfValidate, postLogin);
+router.post(
+  '/login',
+  csrfValidate,
+  [
+    body('email')
+      .isEmail()
+      .withMessage('Please enter a valid email address!')
+      .normalizeEmail(),
+
+    body('password', 'Password has to be valid!')
+      .isLength({ min: 5 })
+      .isAlphanumeric()
+      .trim(),
+  ],
+  postLogin
+);
 
 router.post(
   '/signup',
@@ -43,19 +58,25 @@ router.post(
             'Email exists already, Please pick a different one!'
           );
         }
-      }),
+      })
+      .normalizeEmail(), // Sanitizer
+
     body(
       'password',
       'Please enter a password with only numbers and text and at least 5 characters.'
     )
       .isLength({ min: 5 })
-      .isAlphanumeric(),
-    body('confirmPassword').custom((value, { req }) => {
-      if (value !== req.body.password) {
-        throw new Error('Passwords do not match!');
-      }
-      return true;
-    }),
+      .isAlphanumeric()
+      .trim(),
+
+    body('confirmPassword')
+      .custom((value, { req }) => {
+        if (value !== req.body.password) {
+          throw new Error('Passwords do not match!');
+        }
+        return true;
+      })
+      .trim(),
   ],
   postSignup
 );
