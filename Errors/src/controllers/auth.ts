@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
-import nodemailer from 'nodemailer';
+// import nodemailer from 'nodemailer';
 import { promisify } from 'util';
 import { validationResult } from 'express-validator';
+import HttpError from '../utils/httpError';
 
 import User from '../models/user';
 
@@ -36,8 +37,11 @@ export const getLogin: RequestHandler = (req, res, next) => {
       validationErrors: [],
     });
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 };
 
@@ -55,8 +59,11 @@ export const getSignup: RequestHandler = (req, res, next) => {
       validationErrors: [],
     });
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 };
 
@@ -69,7 +76,6 @@ export async function postLogin(
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    console.log(errors.array());
     res.status(422).render('auth/login', {
       path: '/login',
       pageTitle: 'Login',
@@ -119,8 +125,11 @@ export async function postLogin(
       });
     }
   } catch (err) {
-    console.log(err);
-    res.redirect('/login');
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 }
 
@@ -146,12 +155,12 @@ export async function postSignup(
       validationErrors: errors.array(),
     });
   }
-  const mailOptions = {
-    from: 'shop@node-complete.com',
-    to: email,
-    subject: `Signup Succeeded`,
-    html: `<h1>You successfully signed up!</h1>`,
-  };
+  // const mailOptions = {
+  //   from: 'shop@node-complete.com',
+  //   to: email,
+  //   subject: `Signup Succeeded`,
+  //   html: `<h1>You successfully signed up!</h1>`,
+  // };
   try {
     const hashedPassword = await bcrypt.hash(password, 12);
     // const userDoc = await User.findOne({ email: email });
@@ -170,8 +179,11 @@ export async function postSignup(
     // await transporter.sendMail(mailOptions);
     res.redirect('/login');
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 }
 
@@ -222,8 +234,11 @@ export const postReset: RequestHandler = async (req, res, next) => {
     //          <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password.</p>`,
     // });
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
   // crypto.randomBytes(32, async (err, buffer) => {
   //   if (err) {
@@ -260,8 +275,11 @@ export const getNewPassword: RequestHandler = async (req, res, next) => {
       passwordToken: token,
     });
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 };
 
@@ -289,7 +307,10 @@ export const postNewPassword: RequestHandler = async (req, res, next) => {
     await user.save();
     res.redirect('/login');
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 };

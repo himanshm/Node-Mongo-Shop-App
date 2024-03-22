@@ -174,8 +174,11 @@ export async function postEditProduct(
     console.log('UPDATED PRODUCT!');
     res.redirect('/admin/products');
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 }
 
@@ -191,8 +194,11 @@ export const getProducts: RequestHandler = async (req, res, next) => {
       path: '/admin/products',
     });
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 };
 
@@ -209,7 +215,10 @@ export async function postDeleteProduct(
     console.log('DESTROYED PRODUCT!');
     res.redirect('/admin/products');
   } catch (err) {
-    console.log(err);
-    next(err);
+    if (typeof err === 'string') {
+      const error = new HttpError(err, 500);
+      error.httpErrorCode = 500;
+      return next(error);
+    }
   }
 }
