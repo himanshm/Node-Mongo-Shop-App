@@ -91,7 +91,7 @@ export async function postSignup(
   res: Response,
   next: NextFunction
 ) {
-  const { email, password, confirmPassword } = req.body;
+  const { email, password } = req.body;
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -110,11 +110,11 @@ export async function postSignup(
   };
   try {
     const hashedPassword = await bcrypt.hash(password, 12);
-    const userDoc = await User.findOne({ email: email });
-    if (userDoc) {
-      req.flash('error', 'Email exists already, Please pick a different one!');
-      return res.redirect('/signup');
-    }
+    // const userDoc = await User.findOne({ email: email });
+    // if (userDoc) {
+    //   req.flash('error', 'Email exists already, Please pick a different one!');
+    //   return res.redirect('/signup');
+    // }
 
     const user = new User({
       email: email,
