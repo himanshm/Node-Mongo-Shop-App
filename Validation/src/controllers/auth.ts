@@ -46,6 +46,7 @@ export const getSignup: RequestHandler = (req, res, next) => {
       path: '/signup',
       pageTitle: 'Signup',
       errorMessage: message.length > 0 ? message[0] : null,
+      oldInput: { email: '', password: '', confirmPassword: '' },
     });
   } catch (err) {
     console.log(err);
@@ -59,6 +60,16 @@ export async function postLogin(
   next: NextFunction
 ) {
   const { email, password } = req.body;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    console.log(errors.array());
+    res.status(422).render('auth/login', {
+      path: '/login',
+      pageTitle: 'Login',
+      errorMessage: errors.array()[0].msg,
+    });
+  }
   try {
     const user = await User.findOne({ email: email });
     if (!user) {
@@ -91,7 +102,7 @@ export async function postSignup(
   res: Response,
   next: NextFunction
 ) {
-  const { email, password } = req.body;
+  const { email, password, confirmPassword } = req.body;
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -100,6 +111,11 @@ export async function postSignup(
       path: '/signup',
       pageTitle: 'Signup',
       errorMessage: errors.array()[0].msg,
+      oldInput: {
+        email: email,
+        password: password,
+        confirmPassword: confirmPassword,
+      },
     });
   }
   const mailOptions = {
