@@ -83,17 +83,16 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   console.error(err);
 
   // If an error has a statusCode, use it. Otherwise, default to 500
-  // const statusCode = err.statusCode || 500;
+  const statusCode = err.statusCode || 500;
 
   // Send a response to the client
-  // res.status(statusCode).send({
-  //   error: {
-  //     message: err.message,
-  //     statusCode,
-  //   },
-  // });
+  res.status(statusCode).render('500', {
+    pageTitle: 'Error',
+    path: '/500',
+    isAuthenticated: req.session.isLoggedIn,
+  });
 
-  res.redirect('/500');
+  // res.redirect('/500');
 };
 
 app.use(errorHandler);

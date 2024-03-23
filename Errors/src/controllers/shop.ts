@@ -41,7 +41,7 @@ export async function getProduct(
       pageTitle: product.title,
       path: '/products',
     });
-  } catch (error) {
+  } catch (err) {
     if (typeof err === 'string') {
       const error = new HttpError(err, 500);
       error.httpErrorCode = 500;

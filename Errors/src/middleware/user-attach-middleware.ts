@@ -26,9 +26,9 @@ export const userAttachMiddleware: RequestHandler = async (req, res, next) => {
     }
   } catch (err) {
     if (typeof err === 'string') {
-      throw new Error(err);
+      next(new Error(err));
     } else {
-      throw err; // Rethrow the original error
+      next(err); // Rethrow the original error
     }
   }
 };
