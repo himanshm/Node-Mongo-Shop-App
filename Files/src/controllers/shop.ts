@@ -3,6 +3,7 @@ import Product from '../models/product';
 import Order from '../models/order';
 import fs from 'fs';
 import path from 'path';
+import PDFDocument from 'pdfkit';
 import HttpError from '../../utils/httpError';
 
 export async function getProducts(
@@ -220,6 +221,33 @@ export const getInvoice: RequestHandler = async (req, res, next) => {
       invoiceName
     );
 
+    // Create a new PDF document
+    const pdfDoc = new PDFDocument();
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename="${invoiceName}"`);
+
+    const writeStream = fs.createWriteStream(invoicePath);
+
+    pdfDoc.pipe(writeStream);
+    pdfDoc.pipe(res);
+
+    pdfDoc.fontSize(25).text('Invoice', 100, 50);
+    pdfDoc.text('-----------------------------------', 100, 70);
+    pdfDoc.text(`Order ID: ${orderId}`, 100, 100);
+    let totalPrice = 0;
+    order.products.forEach((prod) => {
+      totalPrice += prod.quantity * prod.product.price;
+      pdfDoc
+        .fontSize(14)
+        .text(
+          `${prod.product.title} - ${prod.quantity} x $${prod.product.price}`
+        );
+    });
+    pdfDoc.text(`---------`);
+    pdfDoc.fontSize(26).text(`Total Price: $${totalPrice}`);
+
+    pdfDoc.end();
     // fs.readFile(invoicePath, (err, data) => {
     //   if (err) {
     //     return next(err);
@@ -229,21 +257,18 @@ export const getInvoice: RequestHandler = async (req, res, next) => {
     //   res.send(data);
     // });
 
-    fs.access(invoicePath, fs.constants.F_OK, (err) => {
-      if (err) {
-        console.log('File does not exist:', err);
-        return next(new Error('Invoice not found.'));
-      }
+    // fs.access(invoicePath, fs.constants.F_OK, (err) => {
+    //   if (err) {
+    //     console.log('File does not exist:', err);
+    //     return next(new Error('Invoice not found.'));
+    //   }
 
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `inline; filename="${invoiceName}"`);
-
-      const fileStream = fs.createReadStream(invoicePath);
-      fileStream.on('error', (error) => {
-        next(error);
-      });
-      fileStream.pipe(res);
-    });
+    //   const fileStream = fs.createReadStream(invoicePath);
+    //   fileStream.on('error', (error) => {
+    //     next(error);
+    //   });
+    //   fileStream.pipe(res);
+    // });
   } catch (err) {
     next(err);
   }
