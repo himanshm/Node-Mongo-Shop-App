@@ -5,6 +5,7 @@ import path from 'path';
 import session from 'express-session';
 import bodyParser from 'body-parser';
 import flash from 'connect-flash';
+import multer from 'multer';
 // Import routes
 import adminRoutes from './routes/admin';
 import shopRoutes from './routes/shop';
@@ -42,6 +43,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Middleware for parsing body and serving static files
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(multer({ dest: 'images' }).single('image'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Set up session with MongoDB session store
@@ -79,17 +81,14 @@ app.get('/500', get500);
 app.use(get404);
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  // Log the error or handle it in any other way
-  console.error(err);
+  console.error(err); // Log the error for server-side debugging
 
-  // If an error has a statusCode, use it. Otherwise, default to 500
-  const statusCode = err.statusCode || 500;
-
-  // Send a response to the client
-  res.status(statusCode).render('500', {
+  const statusCode = err.statusCode || 500; // Default to 500 if statusCode not specified
+  res.status(statusCode).render('error-page', {
     pageTitle: 'Error',
-    path: '/500',
+    path: '/error',
     isAuthenticated: req.session.isLoggedIn,
+    errorMessage: err.message,
   });
 
   // res.redirect('/500');

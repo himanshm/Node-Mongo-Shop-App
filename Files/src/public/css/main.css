@@ -151,6 +151,26 @@ form {
   border-color: #ffeb3b;
 }
 
+.error-message {
+  margin: 20px auto;
+  padding: 10px;
+  background-color: #ffdddd;
+  border-left: 6px solid #f44336;
+  border-radius: 4px;
+  color: #333;
+  max-width: 600px;
+  font-family: Arial, sans-serif;
+}
+
+.error-message h2 {
+  color: #d8000c;
+  font-size: 1.5em;
+}
+
+.error-message p {
+  font-size: 1em;
+}
+
 .backdrop {
   position: fixed;
   top: 0;

@@ -23,7 +23,12 @@ export async function postAddProduct(
   next: NextFunction
 ) {
   let userId: string | undefined;
-  const { title, image, price, description }: ProductType = req.body;
+  const { title, price, description }: ProductType = req.body;
+  if (!req.file) {
+    throw new Error('File upload failed!');
+  }
+  const image: Express.Multer.File = req.file;
+  console.log(image);
   try {
     const errors = validationResult(req);
 
@@ -59,26 +64,12 @@ export async function postAddProduct(
     console.log('Created product');
     res.redirect('/admin/products');
   } catch (err) {
-    // return res.status(500).render('admin/edit-product', {
-    //   pageTitle: 'Add Product',
-    //   path: '/admin/add-product',
-    //   editing: false,
-    //   hasError: true,
-    //   product: {
-    //     title: title,
-    //     imageUrl: imageUrl,
-    //     price: price,
-    //     description: description
-    //   },
-    //   errorMessage: 'Database operation failed, please try again.',
-    //   validationErrors: []
-    // });
-    // res.redirect('/500');
-
     if (typeof err === 'string') {
       const error = new HttpError(err, 500);
       error.httpErrorCode = 500;
       return next(error);
+    } else {
+      next(err);
     }
   }
 }
@@ -125,10 +116,13 @@ export async function postEditProduct(
   next: NextFunction
 ) {
   try {
+    if (!req.file) {
+      throw new Error('File upload failed!');
+    }
     const prodId: string = req.body.productId;
     const updatedTitle: string = req.body.title;
     const updatedPrice: number = req.body.price;
-    const updatedImageUrl: string = req.body.imageUrl;
+    const updatedImage: Express.Multer.File = req.file;
     const updatedDesc: string = req.body.description;
 
     const errors = validationResult(req);
@@ -141,7 +135,7 @@ export async function postEditProduct(
         hasError: true,
         product: {
           title: updatedTitle,
-          imageUrl: updatedImageUrl,
+          image: updatedImage,
           price: updatedPrice,
           description: updatedDesc,
           _id: prodId,
@@ -166,7 +160,7 @@ export async function postEditProduct(
 
     product.title = updatedTitle;
     product.price = updatedPrice;
-    product.image = updatedImageUrl;
+    product.image = updatedImage;
     product.description = updatedDesc;
 
     await product.save();
