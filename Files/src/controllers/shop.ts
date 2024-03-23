@@ -220,16 +220,45 @@ export const getInvoice: RequestHandler = async (req, res, next) => {
       invoiceName
     );
 
-    console.log(invoicePath);
-    fs.readFile(invoicePath, (err, data) => {
+    // fs.readFile(invoicePath, (err, data) => {
+    //   if (err) {
+    //     return next(err);
+    //   }
+    //   res.setHeader('Content-Type', 'application/pdf');
+    //   res.setHeader('Content-Disposition', `inline; filename="${invoiceName}"`);
+    //   res.send(data);
+    // });
+
+    fs.access(invoicePath, fs.constants.F_OK, (err) => {
       if (err) {
-        return next(err);
+        console.log('File does not exist:', err);
+        return next(new Error('Invoice not found.'));
       }
+
       res.setHeader('Content-Type', 'application/pdf');
       res.setHeader('Content-Disposition', `inline; filename="${invoiceName}"`);
-      res.send(data);
+
+      const fileStream = fs.createReadStream(invoicePath);
+      fileStream.on('error', (error) => {
+        next(error);
+      });
+      fileStream.pipe(res);
     });
   } catch (err) {
     next(err);
   }
 };
+
+/* file read stream and call the pipe method to forward the data that is
+
+read in with that stream to response because the response object is a writable stream actually
+
+and you can use readable streams to pipe their output into a writable stream,
+
+not every object is a writable stream but the response happens to be one.
+
+So we can pipe our readable stream, the file stream into the response and that means that the response will
+
+be streamed to the browser and will contain the data and the data will basically be downloaded by the
+
+browser */
