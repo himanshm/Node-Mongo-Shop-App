@@ -6,6 +6,8 @@ import path from 'path';
 import PDFDocument from 'pdfkit';
 import HttpError from '../../utils/httpError';
 
+const ITEMS_PER_PAGE = 2;
+
 export async function getProducts(
   req: Request,
   res: Response,
@@ -59,7 +61,10 @@ export async function getIndex(
   next: NextFunction
 ) {
   try {
-    const products = await Product.find();
+    const page = parseInt(req.query.page as string, 10);
+    const products = await Product.find()
+      .skip((page - 1) * ITEMS_PER_PAGE)
+      .limit(ITEMS_PER_PAGE);
     res.render('shop/index', {
       prods: products,
       pageTitle: 'Shop',
