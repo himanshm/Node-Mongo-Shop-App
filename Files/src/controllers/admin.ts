@@ -25,10 +25,23 @@ export async function postAddProduct(
   let userId: string | undefined;
   const { title, price, description }: ProductType = req.body;
   if (!req.file) {
-    throw new Error('File upload failed!');
+    return res.status(422).render('admin/edit-product', {
+      pageTitle: 'Add Product',
+      path: '/admin/add-product',
+      editing: false,
+      hasError: true,
+      product: {
+        title: title,
+        price: price,
+        description: description,
+      },
+      errorMessage: 'Attached file is not an image.',
+      validationErrors: [],
+    });
   }
   const image: Express.Multer.File = req.file;
-  console.log(image);
+
+  const imageUrl: string = image.path;
   try {
     const errors = validationResult(req);
 
@@ -55,7 +68,7 @@ export async function postAddProduct(
 
     const product = new Product({
       title,
-      image,
+      imageUrl,
       price,
       description,
       userId,
@@ -116,13 +129,13 @@ export async function postEditProduct(
   next: NextFunction
 ) {
   try {
-    if (!req.file) {
-      throw new Error('File upload failed!');
-    }
+    // if (!req.file) {
+    //   throw new Error('File upload failed!');
+    // }
     const prodId: string = req.body.productId;
     const updatedTitle: string = req.body.title;
     const updatedPrice: number = req.body.price;
-    const updatedImage: Express.Multer.File = req.file;
+    const updatedImage: Express.Multer.File = req.file as Express.Multer.File;
     const updatedDesc: string = req.body.description;
 
     const errors = validationResult(req);
@@ -135,7 +148,6 @@ export async function postEditProduct(
         hasError: true,
         product: {
           title: updatedTitle,
-          image: updatedImage,
           price: updatedPrice,
           description: updatedDesc,
           _id: prodId,
@@ -160,7 +172,9 @@ export async function postEditProduct(
 
     product.title = updatedTitle;
     product.price = updatedPrice;
-    product.image = updatedImage;
+    if (updatedImage) {
+      product.imageUrl = updatedImage.path;
+    }
     product.description = updatedDesc;
 
     await product.save();

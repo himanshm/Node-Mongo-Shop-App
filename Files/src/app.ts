@@ -21,7 +21,6 @@ import { userAttachMiddleware } from './middleware/user-attach-middleware';
 import { csrfProtection } from './config/csrf-protection';
 
 import { IUser } from './models/user';
-import { error } from 'console';
 
 // Declare Modules and Interfaces
 declare module 'express-session' {
@@ -36,6 +35,7 @@ declare module 'express-session' {
 const app: Express = express();
 const MONGODB_URI = process.env.MONGODB_URI;
 if (!MONGODB_URI) throw new Error('Database connection string is not provided');
+console.log(MONGODB_URI);
 
 // Set up view engine and views directory
 app.set('view engine', 'ejs');

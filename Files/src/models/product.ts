@@ -5,7 +5,7 @@ export interface ProductType {
   title: string;
   price: number;
   description: string;
-  image: Express.Multer.File;
+  imageUrl: string;
   userId: ObjectId;
   _id?: Types.ObjectId;
 }
@@ -23,7 +23,7 @@ const productSchema = new Schema<ProductType>({
     type: String,
     required: true,
   },
-  image: {
+  imageUrl: {
     type: String,
     required: true,
   },
