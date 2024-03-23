@@ -1,0 +1,14 @@
+<%- include('includes/head.ejs') %>
+</head>
+
+<body>
+    <%- include('includes/navigation.ejs') %>
+    <div class="error-message">
+        <h1>Oops! Something went wrong!</h1>
+        <% if (errorMessage) { %>
+        <p>Error Message: <%= errorMessage %></p>
+    <% } %>
+    </div>
+   
+
+<%- include('includes/end.ejs') %>
