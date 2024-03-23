@@ -198,25 +198,38 @@ export async function getOrders(
   }
 }
 
-export const getInvoice: RequestHandler = (req, res, next) => {
-  const orderId = req.params.orderId;
-  const invoiceName = `invoice-${orderId}.pdf`;
-  const invoicePath = path.join(
-    __dirname,
-    '..', // Up from src to Files
-    '..', // Up from Files to the project root
-    'data',
-    'invoices',
-    invoiceName
-  );
-
-  console.log(invoicePath);
-  fs.readFile(invoicePath, (err, data) => {
-    if (err) {
-      return next(err);
+export const getInvoice: RequestHandler = async (req, res, next) => {
+  try {
+    const orderId = req.params.orderId;
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return next(new Error('Order not found!'));
     }
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="${invoiceName}"`);
-    res.send(data);
-  });
+
+    if (order.user.userId.toString() !== req.user?._id.toString()) {
+      return next(new Error('Unauthorised!'));
+    }
+
+    const invoiceName = `invoice-${orderId}.pdf`;
+    const invoicePath = path.join(
+      __dirname,
+      '..', // Up from src to Files
+      '..', // Up from Files to the project root
+      'data',
+      'invoices',
+      invoiceName
+    );
+
+    console.log(invoicePath);
+    fs.readFile(invoicePath, (err, data) => {
+      if (err) {
+        return next(err);
+      }
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `inline; filename="${invoiceName}"`);
+      res.send(data);
+    });
+  } catch (err) {
+    next(err);
+  }
 };

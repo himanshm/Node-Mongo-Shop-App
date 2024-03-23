@@ -4,6 +4,7 @@ import { ProductType } from './product';
 interface IUser {
   _id: Types.ObjectId;
   email: string;
+  userId: Types.ObjectId;
 }
 
 interface IOrder extends Document {
