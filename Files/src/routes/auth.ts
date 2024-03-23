@@ -12,7 +12,7 @@ import {
   getNewPassword,
   postNewPassword,
 } from '../controllers/auth';
-import { csrfValidate } from '../config/csrf-protection';
+import { csrfValidate } from '../../config/csrf-protection';
 const router = Router();
 
 router.get('/login', getLogin);

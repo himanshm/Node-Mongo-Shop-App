@@ -1,7 +1,9 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 import Product from '../models/product';
 import Order from '../models/order';
-import HttpError from '../utils/httpError';
+import fs from 'fs';
+import path from 'path';
+import HttpError from '../../utils/httpError';
 
 export async function getProducts(
   req: Request,
@@ -195,3 +197,24 @@ export async function getOrders(
     }
   }
 }
+
+export const getInvoice: RequestHandler = (req, res, next) => {
+  const orderId = req.params.orderId;
+  const invoiceName = `invoice-${orderId}.pdf`;
+  const invoicePath = path.join(
+    __dirname,
+    '..', // Up from src to Files
+    '..', // Up from Files to the project root
+    'data',
+    'invoices',
+    invoiceName
+  );
+
+  console.log(invoicePath);
+  fs.readFile(invoicePath, (err, data) => {
+    if (err) {
+      return next(err);
+    }
+    res.send(data);
+  });
+};

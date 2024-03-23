@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 // import nodemailer from 'nodemailer';
 import { promisify } from 'util';
 import { validationResult } from 'express-validator';
-import HttpError from '../utils/httpError';
+import HttpError from '../../utils/httpError';
 
 import User from '../models/user';
 

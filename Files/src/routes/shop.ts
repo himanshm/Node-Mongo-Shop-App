@@ -8,9 +8,10 @@ import {
   postCartDeleteProduct,
   postOrder,
   getOrders,
+  getInvoice,
 } from '../controllers/shop';
 import isAuth from '../middleware/is-auth';
-import { csrfValidate } from '../config/csrf-protection';
+import { csrfValidate } from '../../config/csrf-protection';
 
 const router = Router();
 
@@ -21,6 +22,8 @@ router.get('/products', getProducts);
 router.get('/products/:productId', getProduct);
 
 router.get('/cart', isAuth, getCart);
+
+router.get('/orders/:orderId', isAuth, getInvoice);
 
 router.get('/orders', isAuth, getOrders);
 

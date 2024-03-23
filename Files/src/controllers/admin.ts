@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { ProductType } from '../models/product';
 import { RequestHandler } from 'express-serve-static-core';
 import { validationResult } from 'express-validator';
-import HttpError from '../utils/httpError';
+import HttpError from '../../utils/httpError';
 // import { ObjectId } from 'mongodb';
 
 export function getAddProduct(req: Request, res: Response, next: NextFunction) {

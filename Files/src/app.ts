@@ -13,12 +13,12 @@ import authRoutes from './routes/auth';
 // Import error controller
 import { get404, get500 } from './controllers/error';
 // Import session store configuration
-import { sessionStoreConfig } from './config/session-store';
+import { sessionStoreConfig } from '../config/session-store';
 // Import database connection
-import { mongooseConnect } from './config/database';
+import { mongooseConnect } from '../config/database';
 // Import middlewares
 import { userAttachMiddleware } from './middleware/user-attach-middleware';
-import { csrfProtection } from './config/csrf-protection';
+import { csrfProtection } from '../config/csrf-protection';
 
 import { IUser } from './models/user';
 
