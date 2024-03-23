@@ -1,11 +1,11 @@
 // Import the required modules
-import express, { Express, ErrorRequestHandler } from 'express';
+import express, { Express, ErrorRequestHandler, Request } from 'express';
 import 'dotenv/config';
 import path from 'path';
 import session from 'express-session';
 import bodyParser from 'body-parser';
 import flash from 'connect-flash';
-import multer from 'multer';
+import multer, { FileFilterCallback } from 'multer';
 // Import routes
 import adminRoutes from './routes/admin';
 import shopRoutes from './routes/shop';
@@ -50,9 +50,29 @@ const fileStorage = multer.diskStorage({
   },
 });
 
+type MulterFileFilter = (
+  req: Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback
+) => void;
+
+const fileFilter: MulterFileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg'
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
 // Middleware for parsing body and serving static files
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(multer({ storage: fileStorage }).single('image'));
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
+);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Set up session with MongoDB session store
