@@ -62,13 +62,22 @@ export async function getIndex(
 ) {
   try {
     const page = parseInt(req.query.page as string, 10);
+    const totalItems = await Product.find().countDocuments();
+
     const products = await Product.find()
       .skip((page - 1) * ITEMS_PER_PAGE)
       .limit(ITEMS_PER_PAGE);
+
     res.render('shop/index', {
       prods: products,
       pageTitle: 'Shop',
       path: '/',
+      totalProducts: totalItems,
+      hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
     });
   } catch (err) {
     if (typeof err === 'string') {
@@ -76,6 +85,11 @@ export async function getIndex(
       error.httpErrorCode = 500;
       return next(error);
     }
+
+    const error = new Error(
+      err instanceof Error ? err.message : 'Server error'
+    );
+    return next(error);
   }
 }
 
