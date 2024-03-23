@@ -83,6 +83,7 @@ app.use(
   '/images',
   express.static(path.join(__dirname, '..', 'public', 'images'))
 );
+app.use(express.static('dist'));
 
 // Set up session with MongoDB session store
 const store = sessionStoreConfig(MONGODB_URI);

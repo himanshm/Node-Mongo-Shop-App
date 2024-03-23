@@ -1,6 +1,5 @@
 import { RequestHandler } from 'express';
 import crypto from 'crypto';
-import { Session } from 'express-session';
 
 // Generate a secure CSRF token
 const generateToken = (): string => crypto.randomBytes(32).toString('hex');

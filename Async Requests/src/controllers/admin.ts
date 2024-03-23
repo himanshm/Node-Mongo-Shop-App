@@ -214,13 +214,13 @@ export const getProducts: RequestHandler = async (req, res, next) => {
   }
 };
 
-export async function postDeleteProduct(
+export async function deleteProduct(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const prodId: string = req.body.productId;
+    const prodId: string = req.params.productId;
     const product = await Product.findById(prodId);
     if (!product) {
       return next(new Error('Product not found!'));
@@ -229,12 +229,8 @@ export async function postDeleteProduct(
     await Product.deleteOne({ _id: prodId, userId: req.user?._id });
 
     console.log('DESTROYED PRODUCT!');
-    res.redirect('/admin/products');
+    res.status(200).json({ message: 'Success!' });
   } catch (err) {
-    if (typeof err === 'string') {
-      const error = new HttpError(err, 500);
-      error.httpErrorCode = 500;
-      return next(error);
-    }
+    res.status(500).json({ message: 'Deleting product failed.' });
   }
 }
