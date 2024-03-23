@@ -23,7 +23,7 @@ export async function postAddProduct(
   next: NextFunction
 ) {
   let userId: string | undefined;
-  const { title, imageUrl, price, description }: ProductType = req.body;
+  const { title, image, price, description }: ProductType = req.body;
   try {
     const errors = validationResult(req);
 
@@ -35,7 +35,7 @@ export async function postAddProduct(
         hasError: true,
         product: {
           title: title,
-          imageUrl: imageUrl,
+          image: image,
           price: price,
           description: description,
         },
@@ -50,7 +50,7 @@ export async function postAddProduct(
 
     const product = new Product({
       title,
-      imageUrl,
+      image,
       price,
       description,
       userId,
@@ -166,7 +166,7 @@ export async function postEditProduct(
 
     product.title = updatedTitle;
     product.price = updatedPrice;
-    product.imageUrl = updatedImageUrl;
+    product.image = updatedImageUrl;
     product.description = updatedDesc;
 
     await product.save();
