@@ -4,6 +4,7 @@ import { ProductType } from '../models/product';
 import { RequestHandler } from 'express-serve-static-core';
 import { validationResult } from 'express-validator';
 import HttpError from '../../utils/httpError';
+import { deleteFile } from '../../utils/file';
 // import { ObjectId } from 'mongodb';
 
 export function getAddProduct(req: Request, res: Response, next: NextFunction) {
@@ -174,6 +175,8 @@ export async function postEditProduct(
     product.title = updatedTitle;
     product.price = updatedPrice;
     if (updatedImage) {
+      console.log(product.imageUrl);
+      deleteFile(product.imageUrl);
       product.imageUrl = updatedImage.path.split('public')[1];
     }
     product.description = updatedDesc;
@@ -218,7 +221,11 @@ export async function postDeleteProduct(
 ) {
   try {
     const prodId: string = req.body.productId;
-
+    const product = await Product.findById(prodId);
+    if (!product) {
+      return next(new Error('Product not found!'));
+    }
+    await deleteFile(product.imageUrl);
     await Product.deleteOne({ _id: prodId, userId: req.user?._id });
 
     console.log('DESTROYED PRODUCT!');
