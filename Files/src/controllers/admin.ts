@@ -41,7 +41,8 @@ export async function postAddProduct(
   }
   const image: Express.Multer.File = req.file;
 
-  const imageUrl: string = image.path;
+  const imageUrl: string = image.path.split('public')[1];
+  console.log(imageUrl);
   try {
     const errors = validationResult(req);
 
@@ -173,7 +174,7 @@ export async function postEditProduct(
     product.title = updatedTitle;
     product.price = updatedPrice;
     if (updatedImage) {
-      product.imageUrl = updatedImage.path;
+      product.imageUrl = updatedImage.path.split('public')[1];
     }
     product.description = updatedDesc;
 

@@ -35,18 +35,21 @@ declare module 'express-session' {
 const app: Express = express();
 const MONGODB_URI = process.env.MONGODB_URI;
 if (!MONGODB_URI) throw new Error('Database connection string is not provided');
-console.log(MONGODB_URI);
 
 // Set up view engine and views directory
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+// Setting up the views directory
+app.set('views', path.join(__dirname, '..', 'views'));
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'images');
+    cb(null, path.join(__dirname, '..', 'public', 'images'));
   },
   filename: (req, file, cb) => {
-    cb(null, `${new Date().toISOString()}-${file.originalname}`);
+    // Replace colons (:) from the ISO string as they're not valid in filenames on some systems
+    const timestamp = new Date().toISOString().replace(/:/g, '-');
+    const uniqueSuffix = `${timestamp}-${file.originalname}`;
+    cb(null, uniqueSuffix);
   },
 });
 
@@ -73,7 +76,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
 );
-app.use(express.static(path.join(__dirname, 'public')));
+// Middleware for serving static files
+app.use(express.static(path.join(__dirname, '..', 'public')));
+// Serving images from public/images
+app.use(
+  '/images',
+  express.static(path.join(__dirname, '..', 'public', 'images'))
+);
 
 // Set up session with MongoDB session store
 const store = sessionStoreConfig(MONGODB_URI);
